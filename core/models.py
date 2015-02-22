@@ -1,6 +1,31 @@
 from django.db import models
 from django.db import transaction
-from django.db.models import F
+from django.db.models import F, Prefetch
+from django.core.paginator import Paginator
+
+class BoardManager(models.Manager):
+    def threads_page(self, page_num, board):
+        """Returns EVALUATED threads list."""
+        entries = Thread.objects.visible().order()
+        paginator = Paginator(entries, board.threads_per_page)
+        # ensure that page in [1, num_pages]
+        page_num = max(min(page_num, paginator.num_pages), 1)
+        page = paginator.page(page_num)
+        threads = page.object_list
+
+        # This is a dumb implementation of greatest-n-per-category pattern
+        # done by simply fetching all the posts and then truncating
+        # TODO: dig into a better implementation
+        threads = threads.prefetch_related(Prefetch('post_set',
+                                           queryset=Post.objects.present()))
+
+        threads = list(threads)
+        for t in threads:
+            # TODO: 4 is hard-coded, probably need add the option to the Board table
+            t.latest_posts = list(t.post_set.all())[-4:]
+            t.posts_set = None
+        page.object_list = threads
+        return page
 
 class Board(models.Model):
     slug = models.SlugField(unique=True)
@@ -8,6 +33,8 @@ class Board(models.Model):
     pages_num = models.PositiveSmallIntegerField(default=10)
     bumplimit = models.PositiveSmallIntegerField(default=500)
     description = models.TextField(blank=True)
+
+    objects = BoardManager()
 
     @property
     def max_threads(self):
@@ -35,6 +62,7 @@ class BasePost(models.Model):
 class ThreadsManager(models.Manager):
     @transaction.atomic
     def create(self, *args, **kwargs):
+        """Create new thread and mark the oldest (by `bumped_at`) as hidden."""
         thread = Thread(*args, **kwargs)
         thread.save()
 
@@ -53,7 +81,7 @@ class ThreadsQuerySet(models.QuerySet):
 
 
 class Thread(BasePost):
-    board = models.ForeignKey(Board)
+    board = models.ForeignKey(Board, db_index=False)
     is_pinned = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False,
                                     help_text="New posts cannot be submitted.")
@@ -63,6 +91,9 @@ class Thread(BasePost):
 
     objects = ThreadsManager.from_queryset(ThreadsQuerySet)()
 
+    class Meta:
+        index_together = ['board', 'is_pinned', 'bumped_at']
+
     def __unicode__(self):
         return u"<Thread: {}>".format(self.pk)
 
@@ -71,7 +102,7 @@ class PostsManager(models.Manager):
     @transaction.atomic
     def create(self, *args, **kwargs):
         """Create a new post, bump the related thread,
-           increment posts counter on the related thread. """
+           increment posts counter on the related thread."""
         post = Post(*args, **kwargs)
         post.save()
         thread = Thread.objects.select_for_update().select_related('board').get(pk=post.thread_id)
@@ -83,10 +114,14 @@ class PostsManager(models.Manager):
         post.thread = thread
         return post
 
+class PostsQuerySet(models.QuerySet):
+    def present(self):
+        # ordering by id since it corresponds the order of posting
+        return self.filter(is_hidden=False).order_by('pk')
 class Post(BasePost):
     thread = models.ForeignKey(Thread)
 
-    objects = PostsManager()
+    objects = PostsManager.from_queryset(PostsQuerySet)()
 
     def __unicode__(self):
         return u"<Post: {}>".format(self.title or self.pk)
