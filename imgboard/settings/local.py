@@ -1,6 +1,6 @@
 from .base import *
 
-INSTALLED_APPS += ('debug_toolbar',)
+INSTALLED_APPS += ('debug_toolbar', 'django.contrib.webdesign')
 
 DATABASES = {
     'default': {

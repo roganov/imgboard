@@ -1,0 +1,32 @@
+.board-header {
+    text-align: center;
+    border-bottom: 1px solid #EEE;
+    padding-bottom: 10px;
+}
+.thread img {
+    float: left;
+    margin: 0 15px 8px 0;
+    overflow: auto;
+}
+.post {
+    display: inline-block;
+    background-color: #d5e9e6;
+    margin: 2px 0 0 20px;
+    padding: 2px 0 0 0px;
+    overflow: auto;
+    border-radius: 5px;
+}
+.text {
+    padding-left: 30px;
+}
+.post-title {
+    padding: 2px 10px 2px 10px;
+}
+.footer {
+    padding: 20px 0 10px 0;
+}
+.form-group.required .control-label:after {
+  content:"*";
+  color:red;
+}
+
