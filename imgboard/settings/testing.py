@@ -1,5 +1,5 @@
 from .base import *
-INSTALLED_APPS += ['django_nose', 'mock']
+INSTALLED_APPS += ('django_nose', 'mock')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
