@@ -2,11 +2,13 @@ from django.db import models
 from django.db import transaction
 from django.db.models import F, Prefetch
 from django.core.paginator import Paginator
+from django.core.urlresolvers import reverse
 
 class BoardManager(models.Manager):
+    # TODO: make this a Bord method rather than Manager
     def threads_page(self, page_num, board):
         """Returns EVALUATED threads list."""
-        entries = Thread.objects.visible().order()
+        entries = board.thread_set.visible().order()
         paginator = Paginator(entries, board.threads_per_page)
         # ensure that page in [1, num_pages]
         page_num = max(min(page_num, paginator.num_pages), 1)
@@ -29,10 +31,11 @@ class BoardManager(models.Manager):
 
 class Board(models.Model):
     slug = models.SlugField(unique=True)
+    title = models.CharField(max_length=150)
+    description = models.TextField(blank=True)
     threads_per_page = models.PositiveSmallIntegerField(default=10)
     pages_num = models.PositiveSmallIntegerField(default=10)
     bumplimit = models.PositiveSmallIntegerField(default=500)
-    description = models.TextField(blank=True)
 
     objects = BoardManager()
 
@@ -42,6 +45,9 @@ class Board(models.Model):
 
     def __unicode__(self):
         return u"<Board: %s>" % self.slug
+
+    def get_absolute_url(self):
+        return reverse('board', kwargs={'slug': self.slug})
 
 class BasePost(models.Model):
     name = models.CharField(max_length=100, blank=True)
@@ -96,6 +102,10 @@ class Thread(BasePost):
 
     def __unicode__(self):
         return u"<Thread: {}>".format(self.pk)
+
+    def get_absolute_url(self):
+        return reverse('thread', kwargs={'slug': self.board.slug,
+                                         'thread_id': self.pk})
 
 class PostsManager(models.Manager):
 

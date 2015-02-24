@@ -4,7 +4,7 @@ from django.forms.models import model_to_dict
 import factory
 import time
 
-from .models import Board, Thread, Post
+from core.models import Board, Thread, Post
 
 class PostFactory(factory.DjangoModelFactory):
     class Meta:
@@ -16,6 +16,7 @@ class ThreadFactory(factory.DjangoModelFactory):
 
 
 class BoardFactory(factory.DjangoModelFactory):
+    slug = 'test'
     class Meta:
         model = Board
 

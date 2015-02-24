@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <h2 class="board-header"><a href="#">Programming</a></h2>
+    <h2 class="board-header"><a href="{{ board.get_absolute_url }}">{{ board.title }}</a></h2>
 
     {% block content %}{% endblock %}
 
