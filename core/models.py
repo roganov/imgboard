@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.db import transaction
 from django.db.models import F, Prefetch
@@ -49,6 +50,14 @@ class Board(models.Model):
     def get_absolute_url(self):
         return reverse('board', kwargs={'slug': self.slug})
 
+
+def image_upload_path(instance, filename):
+    if '.' in filename:
+        extension = filename.split('.')[-1]
+    else:
+        extension = ''
+    return "images/{}.{}".format(uuid.uuid4(), extension)
+
 class BasePost(models.Model):
     name = models.CharField(max_length=100, blank=True)
     title = models.CharField(max_length=150, blank=True)
@@ -57,6 +66,7 @@ class BasePost(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_hidden = models.BooleanField(default=False)  # fake deletion
 
+    image = models.ImageField(upload_to=image_upload_path, null=True)
     class Meta:
         abstract = True
 
@@ -128,6 +138,7 @@ class PostsQuerySet(models.QuerySet):
     def present(self):
         # ordering by id since it corresponds the order of posting
         return self.filter(is_hidden=False).order_by('pk')
+
 class Post(BasePost):
     thread = models.ForeignKey(Thread)
 
