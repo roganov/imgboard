@@ -6,7 +6,7 @@
     <a href="{{ thread.get_absolute_url }}"><h4><b>{{ thread.title }}</b> -- by {% firstof thread.name 'Anonymous' %} -- {{ thread.created_at }}</h4></a>
 
     <p>
-        {% if thread.image %}<a href="{{ thread.image.url }}"><img src="{{ thread.image.url }}"></a>{% endif %}
+        {% if thread.image and thread.thumbnail %}<a href="{{ thread.image.url }}"><img src="{{ thread.thumbnail.url }}"></a>{% endif %}
         {{ thread.body | safe }}
     </p>
     {% for post in posts %}

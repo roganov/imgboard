@@ -1,14 +1,15 @@
 import os
+
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.core.urlresolvers import reverse
-
 from django_nose.tools import *
 from nose.tools import *
 import mock
 
 from ..models import Post
-from .test_models import BoardFactory, ThreadFactory, PostFactory
+from .factories import BoardFactory, ThreadFactory
+
 
 TEST_PHOTO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_photo.jpg')
 

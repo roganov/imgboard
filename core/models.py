@@ -1,9 +1,13 @@
 import uuid
+
 from django.db import models
 from django.db import transaction
 from django.db.models import F, Prefetch
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
+
+from .utils import get_thumbnail
+
 
 class BoardManager(models.Manager):
     # TODO: make this a Bord method rather than Manager
@@ -67,12 +71,20 @@ class BasePost(models.Model):
     is_hidden = models.BooleanField(default=False)  # fake deletion
 
     image = models.ImageField(upload_to=image_upload_path, null=True)
+    thumbnail = models.ImageField(upload_to='thumbs/', null=True)
     class Meta:
         abstract = True
 
     def save(self, *args, **kwargs):
         # TODO: function to actually compute the body
         self.body = self.raw_body
+
+        if self.image:
+            thumb = get_thumbnail(self.image)
+            self.image.save(self.image.name, self.image, save=False)
+            img_name = self.image.name.split('/')[-1]
+            self.thumbnail.save(img_name, thumb, save=False)
+
         super(BasePost, self).save(*args, **kwargs)
 
 class ThreadsManager(models.Manager):

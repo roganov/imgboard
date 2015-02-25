@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Board, Thread, Post
+
+from .models import Board, Thread
 from .forms import PostForm, ThreadForm
 
 

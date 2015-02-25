@@ -1,24 +1,14 @@
-from django.test import TestCase
-from django.forms.models import model_to_dict
-
-import factory
+import os
 import time
 
-from core.models import Board, Thread, Post
+from django.test import TestCase
+from django.core.files.base import File
+from django.test.utils import override_settings
 
-class PostFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = Post
+from core.models import Board, Thread
+from .factories import BoardFactory, ThreadFactory, PostFactory
+from .test_views import TEST_PHOTO_PATH
 
-class ThreadFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = Thread
-
-
-class BoardFactory(factory.DjangoModelFactory):
-    slug = 'test'
-    class Meta:
-        model = Board
 
 class TestBoard(TestCase):
     def test_board_paginator(self):
@@ -73,6 +63,19 @@ class TestThread(TestCase):
         threads = [Thread.objects.get(pk=pk) for pk in thread_ids]
         self.assertTrue(threads[0].is_hidden)
         self.assertTrue(all(not t.is_hidden for t in threads[1:]))
+
+    @override_settings(MEDIA_ROOT='/tmp/')
+    def test_save_creates_thumbnail(self):
+        thread = ThreadFactory(board=BoardFactory())
+        with open(TEST_PHOTO_PATH) as f:
+            img = File(f)
+            thread.image = img
+            self.assertFalse(thread.thumbnail)
+            thread.save()
+        self.assertTrue(thread.thumbnail)
+        self.assertTrue(os.path.exists("/tmp/" + thread.image.name))
+        name = thread.image.name.split("/")[-1]
+        self.assertTrue(os.path.exists("/tmp/thumbs/" + name))
 
 
 class TestPost(TestCase):
