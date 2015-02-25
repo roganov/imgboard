@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load core_extras %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -13,20 +14,21 @@
     <div class="page-header">
         <h3>List of boards:</h3>
         <div class="row show-grid">
+            {% get_boards as boards %}
             <div class="col-md-4">
-                <a href="#">Programming</a><br>
-                <a href="#">Politics</a><br>
-                <a href="#">Economics</a>
+                {% for b in boards|slice:"::3" %}
+                <a href="{{ b.get_absolute_url }}">{{ b.title }}</a><br>
+                {% endfor %}
             </div>
             <div class="col-md-4">
-                <a href="#">Programming</a><br>
-                <a href="#">Politics</a><br>
-                <a href="#">Economics</a>
+                {% for b in boards|slice:"1::3" %}
+                    <a href="{{ b.get_absolute_url }}">{{ b.title }}</a><br>
+                {% endfor %}
             </div>
             <div class="col-md-4">
-                <a href="#">Programming</a><br>
-                <a href="#">Politics</a><br>
-                <a href="#">Economics</a>
+                {% for b in boards|slice:"2::3" %}
+                    <a href="{{ b.get_absolute_url }}">{{ b.title }}</a><br>
+                {% endfor %}
             </div>
         </div>
     </div>
