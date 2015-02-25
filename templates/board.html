@@ -25,21 +25,33 @@
 
     <nav>
         <ul class="pagination">
+            {% if not page.has_previous %}
             <li class="disabled">
-                {#                <a href="#" aria-label="Previous">#}
                 <span aria-hidden="true">&laquo;</span>
-                {#                </a>#}
             </li>
-            <li class="active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
+            {% else %}
             <li>
-                <a href="#" aria-label="Next">
+            <a href="{% url 'board' slug=board.slug page=page.previous_page_number %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+            </li>
+            {% endif %}
+
+            {% for i in page.paginator.page_range %}
+            <li {% if page.number == i %}class="active"{% endif %}><a href="{% url 'board' slug=board.slug page=i %}">{{ i }}</a></li>
+            {% endfor %}
+            {% if not page.has_next %}
+            <li class="disabled" >
+                <span aria-hidden="true">&raquo;</span>
+            </li>
+            {% else %}
+                <li>
+                <a href="{% url 'board' slug=board.slug page=page.next_page_number %}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
+                </li>
             </li>
+            {% endif %}
         </ul>
     </nav>
     <form class="form" method="POST" action="." enctype="multipart/form-data">{% csrf_token %}
@@ -67,20 +79,29 @@
             </div>
         </div>
         <div class="row">
-  <div class="form-group required col-xs-12">
+  <div class="form-group {% if form.image.errors %}has-error{% endif %} required col-xs-12">
     <label for="exampleInputFile" class="col-xs-1 control-label">File</label>
       <div class="col-xs-6">
-    <input name="image" type="file" id="exampleInputFile">
-          <p class="help-block">Image or GIF allowed.</p>
+          <input name="image" type="file" id="exampleInputFile">
+          <p class="help-block">
+              {% if form.image.errors %}
+                {{ form.image.errors.0 }}
+              {% else %}
+                  Image or GIF allowed.
+              {% endif %}
+          </p>
       </div>
   </div>
     </div>
         <div class="row">
-            <div class="form-group required col-xs-12">
+            <div class="form-group {% if form.raw_body.errors %}has-error{% endif %} required col-xs-12">
             <label for="inputBody" class="col-xs-1 control-label">Body</label>
                 <div class="col-xs-6">
-            <textarea name="raw_body" class="form-control" rows="3"></textarea>
-                    </div>
+                    <textarea name="raw_body" class="form-control" rows="3"></textarea>
+                    {% if form.raw_body.errors %}
+                        <p class="help-block">{{ form.raw_body.errors.0 }}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
         <div class="form-group">

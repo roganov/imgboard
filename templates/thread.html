@@ -50,10 +50,13 @@
             </div>
         </div>
         <div class="row">
-            <div class="form-group required col-xs-12">
+            <div class="form-group {% if form.raw_body.errors %}has-error{% endif %} required col-xs-12">
                 <label for="inputBody" class="col-xs-1 control-label">Body</label>
                 <div class="col-xs-6">
                     <textarea name="raw_body" class="form-control" rows="3"></textarea>
+                    {% if form.raw_body.errors %}
+                    <p class="help-block">{{ form.raw_body.errors.0 }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
