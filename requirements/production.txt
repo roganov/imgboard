@@ -4,3 +4,5 @@ psycopg2==2.6
 dj-database-url==0.3.0
 gunicorn==19.2.1
 whitenoise==1.0.6
+git+https://github.com/jschneier/django-storages@8642018ab3a4f413e66f2b4e15cbd5c5b94014b6
+boto==2.36.0
