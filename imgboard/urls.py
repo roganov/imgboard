@@ -6,6 +6,7 @@ from django.views.generic.base import TemplateView
 
 from core.views import board_view, thread_view
 
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'imgboard.views.home', name='home'),
@@ -13,6 +14,7 @@ urlpatterns = patterns('',
 
     url(r'^__admin/', include(admin.site.urls)),
 
+    url(r'^about/markup/$', TemplateView.as_view(template_name='markup_syntax.html'), name='syntax'),
     url(r'^(?P<slug>\w+)/(?P<page>\d+/?)?$', board_view, name='board'),
     url(r'^(?P<slug>\w+)/t/(?P<thread_id>\d+)$', thread_view, name='thread'),
     url(r'^board/1/', TemplateView.as_view(template_name='thread.html')),

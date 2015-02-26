@@ -30,4 +30,13 @@
   content:"*";
   color:red;
 }
-
+span.spoiler {
+    background-color: grey;
+    color: grey;
+}
+span.spoiler:hover {
+    background-color: transparent;
+    color: inherit;
+}
+div.grid-border .row {
+}

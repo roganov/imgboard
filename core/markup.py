@@ -33,7 +33,7 @@ REG_LINE_LEVEL = re.compile(r'''(?imx)
 
 block_functions = {
     'quote': lambda ys: u"<blockquote>{}</blockquote>".format('\n'.join(parse_block_level(ys))),
-    'p': lambda ys: u"<p>{}</p>".format(''.join(parse_span_level(y) for y in ys)),
+    'p': lambda ys: u"<p>{}</p>".format(' '.join(parse_span_level(y) for y in ys)),
     'code': lambda ys: highlight('\n'.join(ys)),
     'fence': lambda code, lang: highlight(code, lang),
     'ul': lambda ys: u"<ul><li>{}</li></ul>".format("</li><li>".join(parse_span_level(y) for y in ys)),

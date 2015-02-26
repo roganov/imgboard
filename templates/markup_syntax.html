@@ -1,0 +1,139 @@
+{% extends '_base.html' %}
+{% load core_extras %}
+
+{% block title %}Markup Syntax{% endblock %}
+<h2 class="board-header">Markup Syntax</h2>
+{% block content %}
+    <div class="grid-border">
+    <h2 class="board-header">Markup Syntax</h2>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <h3 class="text-center">Syntax</h3>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            <h3 class="text-center">Result</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+<pre>
+Lines
+are joined.
+
+Add empty line to break.
+</pre>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            {% markup %}
+Lines
+are joined.
+
+Add empty line to break.
+            {% endmarkup %}
+        </div>
+    </div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-2">
+        <pre>**Bold**</pre>
+    </div>
+    <div class="col-md-4 col-md-offset-1">
+        {% markup %}**Bold**{% endmarkup %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-2">
+<pre>*Italic*</pre>
+    </div>
+    <div class="col-md-4 col-md-offset-1">
+        {% markup %} *Italic* {% endmarkup %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-2">
+<pre>~~Strikethough~~</pre>
+    </div>
+    <div class="col-md-4 col-md-offset-1">
+        {% markup %}
+        ~~Strikethough~~
+        {% endmarkup %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-2">
+        <pre>%%Spoiler%%</pre>
+    </div>
+    <div class="col-md-4 col-md-offset-1">
+{% markup %}
+%%Spoiler%%
+{% endmarkup %}
+    </div>
+</div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+        <pre>http://example.com</pre>
+       </div>
+        <div class="col-md-4 col-md-offset-1">
+            {% markup %}
+                http://example.com
+            {% endmarkup %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+<pre>
+- Item 1
+- Item 2
+</pre>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            {% markup %}
+- Item 1
+- Item 2
+           {% endmarkup %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+<pre>
+> Quote
+> Quote</pre>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            {% markup %}
+> Quote
+> Quote
+            {% endmarkup %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+<pre>
+Inline code: `print foo()`
+</pre>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            {% markup %}
+        Inline code: `print foo()`
+            {% endmarkup %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+<pre>
+```python
+def fib(n):
+    return 1 if n <= 1 else n*fin(n-1)
+```
+</pre>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+{% markup %}
+```python
+def fib(n):
+    return 1 if n <= 1 else n*fin(n-1)
+```
+{% endmarkup %}
+        </div>
+    </div>
+    </div>
+{% endblock %}

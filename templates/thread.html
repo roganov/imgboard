@@ -63,6 +63,9 @@
                         {% if form.raw_body.errors %}
                             <p class="help-block">{{ form.raw_body.errors.0 }}</p>
                         {% endif %}
+                        <p class="help-block">We use a custom markup. <a target="_blank" href="{% url 'syntax' %}">Click</a>
+                            to learn the syntax.
+                        </p>
                     </div>
                 </div>
             </div>
