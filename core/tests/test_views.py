@@ -8,6 +8,7 @@ from nose.tools import *
 import mock
 
 from ..models import Post
+from ..markup import parse
 from .factories import BoardFactory, ThreadFactory
 
 
@@ -37,7 +38,9 @@ class TestBoardView(TestCase):
             r = self.client.post(b.get_absolute_url(), {'raw_body': 'Body', 'image': f})
         t = b.thread_set.latest('id')  # fetch created thread
         assert_redirects(r, t.get_absolute_url())
-        eq_(t.body, 'Body')
+        eq_(t.raw_body, 'Body')
+        # test that raw_body is transformed
+        eq_(t.body, parse('Body'))
         ok_(os.path.exists('/tmp/' + t.image.name))
 
         r = self.client.post(b.get_absolute_url(), {'raw_body': 'Body'})

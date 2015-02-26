@@ -1,8 +1,8 @@
 <div class="post">
     <div class="post-title"><b>{{ post.title }}</b> -- by {% firstof post.name 'Anonymous' %} -- {{ post.created_at }}</div>
-    <p class="text">
+    <div class="text">
         {% if post.image and post.thumbnail %}<a href="{{ post.image.url }}"><img src="{{ post.thumbnail.url }}"></a>{% endif %}
         {{ post.body | safe }}
-    </p>
+    </div>
 </div>
 

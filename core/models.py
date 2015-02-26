@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 
 from .utils import get_thumbnail
+from .markup import parse
 
 
 class BoardManager(models.Manager):
@@ -77,7 +78,7 @@ class BasePost(models.Model):
 
     def save(self, *args, **kwargs):
         # TODO: function to actually compute the body
-        self.body = self.raw_body
+        self.body = parse(self.raw_body)
 
         if self.image:
             thumb = get_thumbnail(self.image)
