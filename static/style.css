@@ -12,7 +12,7 @@
     display: inline-block;
     background-color: #d5e9e6;
     margin: 2px 0 0 20px;
-    padding: 2px 0 0 0px;
+    padding: 2px 20px 0 0;
     overflow: auto;
     border-radius: 5px;
 }
@@ -21,7 +21,7 @@
     margin-bottom: 10px;
 }
 .post-title {
-    padding: 2px 10px 10px 10px;
+    padding: 2px 0 10px 10px;
 }
 .footer {
     padding: 20px 0 10px 0;
