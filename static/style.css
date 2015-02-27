@@ -39,4 +39,5 @@ span.spoiler:hover {
     color: inherit;
 }
 div.grid-border .row {
+    margin-top: 10px;
 }
