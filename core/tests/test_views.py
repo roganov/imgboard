@@ -34,6 +34,8 @@ class TestBoardView(TestCase):
     @override_settings(MEDIA_ROOT='/tmp')
     def test_post(self):
         b = BoardFactory()
+
+        # posting with image
         with open(TEST_PHOTO_PATH) as f:
             r = self.client.post(b.get_absolute_url(), {'raw_body': 'Body', 'image': f})
         t = b.thread_set.latest('id')  # fetch created thread
@@ -43,9 +45,17 @@ class TestBoardView(TestCase):
         eq_(t.body, parse('Body'))
         ok_(os.path.exists('/tmp/' + t.image.name))
 
+        # image is required, thread creation must fail
         r = self.client.post(b.get_absolute_url(), {'raw_body': 'Body'})
-        assert_code(r, 200)  # error because image is required
+        assert_code(r, 200)
+        ok_(r.context['form'].errors['image'])
 
+        # raw_boy must include visible characters, thread creation must fail
+        r = self.client.post(b.get_absolute_url(), {'raw_body': '   \n  \t   '})
+        assert_code(r, 200)
+        ok_(r.context['form'].errors['raw_body'])
+
+        assert_code(r, 200)  # error because image is required
         r = self.client.post(reverse('board', kwargs={'slug': 'nonexisting'}))
         assert_code(r, 404)
 

@@ -1,4 +1,5 @@
 import uuid
+from django.core.validators import RegexValidator
 
 from django.db import models
 from django.db import transaction
@@ -66,7 +67,9 @@ def image_upload_path(instance, filename):
 class BasePost(models.Model):
     name = models.CharField(max_length=100, blank=True)
     title = models.CharField(max_length=150, blank=True)
-    raw_body = models.TextField()
+    raw_body = models.TextField(validators=[
+        RegexValidator(regex=r'^\s*$', message='The body may not be empty.', inverse_match=True)
+    ])
     body = models.TextField()   # computed raw_body
     created_at = models.DateTimeField(auto_now_add=True)
     is_hidden = models.BooleanField(default=False)  # fake deletion
