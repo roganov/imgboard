@@ -1,8 +1,13 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.views.generic import View
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from .models import Board, Thread
 from .forms import PostForm, ThreadForm
+
+import markup
 
 
 def board_view(request, slug, page=None):
@@ -31,3 +36,10 @@ def thread_view(request, slug, thread_id):
     posts = thread.post_set.present()
     return render(request, 'thread.html', {'board': thread.board, 'thread': thread,
                                            'form': form, 'posts': posts})
+
+
+@csrf_exempt
+@require_POST
+def markup_view(request):
+    text = request.POST.get('text', '')
+    return JsonResponse({'markup': markup.parse(text)})

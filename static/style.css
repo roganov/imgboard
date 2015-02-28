@@ -41,3 +41,8 @@ span.spoiler:hover {
 div.grid-border .row {
     margin-top: 10px;
 }
+.markupPreview {
+    display: none;
+    padding: 5px;
+    border: 1px dotted grey;
+}
