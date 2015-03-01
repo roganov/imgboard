@@ -8,6 +8,7 @@ from .models import Board, Thread
 from .forms import PostForm, ThreadForm
 
 import markup
+import post_markup
 
 
 def board_view(request, slug, page=None):
@@ -42,4 +43,5 @@ def thread_view(request, slug, thread_id):
 @require_POST
 def markup_view(request):
     text = request.POST.get('text', '')
-    return JsonResponse({'markup': markup.parse(text)})
+    board = get_object_or_404(Board, slug=request.POST.get('board_slug'))
+    return JsonResponse({'markup': post_markup.replies_to_links(markup.parse(text), board)})

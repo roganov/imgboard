@@ -76,12 +76,12 @@ class BasePost(models.Model):
 
     image = models.ImageField(upload_to=image_upload_path, null=True)
     thumbnail = models.ImageField(upload_to='thumbs/', null=True)
+
     class Meta:
         abstract = True
 
     def save(self, *args, **kwargs):
-        # TODO: function to actually compute the body
-        self.body = parse(self.raw_body)
+        self.body = replies_to_links(parse(self.raw_body), board=self.board)
 
         if self.image:
             thumb = get_thumbnail(self.image)
@@ -160,5 +160,13 @@ class Post(BasePost):
 
     objects = PostsManager.from_queryset(PostsQuerySet)()
 
+    @property
+    def board(self):
+        return self.thread.board
+
     def __unicode__(self):
         return u"<Post: {}>".format(self.title or self.pk)
+
+
+# avoiding circular imports
+from .post_markup import replies_to_links

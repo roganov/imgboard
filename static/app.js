@@ -1,5 +1,6 @@
 window.onload = function() {
     var btns = [].slice.call(document.querySelectorAll('.markupPreviewBtn'));
+    var board_slug = window.location.pathname.match(/\/(\w+)\//)[1];
     function handler(e) {
         e.preventDefault();
 
@@ -13,7 +14,7 @@ window.onload = function() {
             previewDiv.style.display = 'block';
             previewDiv.innerHTML = JSON.parse(this.responseText).markup;
         };
-        req.send('text='+ encodeURIComponent(text));
+        req.send('text='+ encodeURIComponent(text) + '&board_slug=' + board_slug);
     }
     btns.forEach(function(btn) {
         btn.addEventListener('click', handler);
