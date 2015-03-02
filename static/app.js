@@ -20,6 +20,13 @@ window.onload = function() {
         btn.addEventListener('click', handler);
     });
 
+    $(".reply-this").click(function(e) {
+        e.preventDefault();
+        var replyToId = $(this).parent().parent().attr('id');
+        var textarea = $('form textarea');
+        textarea.val(textarea.val() + ">>" + replyToId + "\n").focus();
+    })
+
     $("body").on('mouseenter', '.reply', function(e) {
         var $this = $(this);
         var replyId = $this.text().slice(2);  // slicing `>>`

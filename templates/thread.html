@@ -4,9 +4,12 @@
 {% block content %}
     <div class="thread">
         <div id="t{{ thread.pk }}">
-        <a href="{{ thread.get_absolute_url }}"><h4><b>{{ thread.title }}</b> --
-            by {% firstof thread.name 'Anonymous' %} -- {{ thread.created_at }}</h4></a>
-
+            <div class="post-title">
+                <a href="{{ thread.get_absolute_url }}"><b>{{ thread.title }}</b></a> --
+                by {% firstof thread.name 'Anonymous' %} -- {{ thread.created_at }}
+                <a href="#t{{ thread.pk }}">#t{{ thread.pk }}</a>
+                <a class="reply-this">Reply to this</a>
+            </div>
             {% if thread.image and thread.thumbnail %}
                 <a class="img-popup" href="{{ thread.image.url }}"><img src="{{ thread.thumbnail.url }}"></a>{% endif %}
             {{ thread.body | safe }}
@@ -19,7 +22,7 @@
         <div class="clearfix"></div>
         <br>
 
-    <form id="form" class="form" method="POST" action="#form" enctype="multipart/form-data">{% csrf_token %}
+        <form id="form" class="form" method="POST" action="#form" enctype="multipart/form-data">{% csrf_token %}
             <div class="row">
                 <div class="form-group col-xs-12">
                     <label for="inputTitle" class="col-xs-1 control-label">Title</label>
@@ -66,6 +69,7 @@
                         <p class="help-block">
                             We use a <a target="_blank" href="{% url 'syntax' %}">custom markup</a>.
                         </p>
+
                         <div class="markupPreview"></div>
                     </div>
                 </div>

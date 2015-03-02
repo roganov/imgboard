@@ -2,6 +2,7 @@
     <div class="post-title">
         <b>{{ post.title }}</b> -- by {% firstof post.name 'Anonymous' %} -- {{ post.created_at }}
         <a href="#{{ post.pk }}">#{{ post.pk }}</a>
+        <a href="#" class="reply-this">Reply to this</a>
     </div>
     <div class="text">
         {% if post.image and post.thumbnail %}<a class="img-popup" href="{{ post.image.url }}"><img src="{{ post.thumbnail.url }}"></a>{% endif %}
