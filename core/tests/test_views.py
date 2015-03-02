@@ -9,7 +9,7 @@ import mock
 
 from ..models import Post
 from ..markup import parse
-from .factories import BoardFactory, ThreadFactory
+from .factories import BoardFactory, ThreadFactory, PostFactory
 
 
 TEST_PHOTO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_photo.jpg')
@@ -86,3 +86,17 @@ class TestThreadView(TestCase):
         p = Post.objects.filter(thread=thread).latest('pk')
         ok_(os.path.exists('/tmp/' + p.image.name))
         assert_redirects(r, thread.get_absolute_url())
+
+class TestPreview(TestCase):
+    def test(self):
+        t = ThreadFactory(board=BoardFactory())
+        r = self.client.get(reverse('api-preview', args=(t.board.slug, "t{}".format(t.pk))))
+        assert_ok(r)
+        assert_template_used(r, '_post.html')
+
+        r = self.client.get(reverse('api-preview', args=(t.board.slug, "t{}".format(t.pk + 1))))
+        assert_code(r, 404)
+
+        p = PostFactory(thread=t)
+        r = self.client.get(reverse('api-preview', args=(t.board.slug, p.pk)))
+        assert_ok(r)

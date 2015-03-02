@@ -1,10 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponseRedirect, JsonResponse
-from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 
-from .models import Board, Thread
+from .models import Board, Thread, Post
 from .forms import PostForm, ThreadForm
 
 import markup
@@ -45,3 +44,12 @@ def markup_view(request):
     text = request.POST.get('text', '')
     board = get_object_or_404(Board, slug=request.POST.get('board_slug'))
     return JsonResponse({'markup': post_markup.replies_to_links(markup.parse(text), board)})
+
+@csrf_exempt
+@require_GET
+def preview(request, slug, id_):
+    if id_[0] == 't':
+        prev = get_object_or_404(Thread, board__slug=slug, pk=id_[1:])
+    else:
+        prev = get_object_or_404(Post, thread__board__slug=slug, pk=id_)
+    return render_to_response('_post.html', {'post': prev})

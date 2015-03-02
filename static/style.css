@@ -3,7 +3,7 @@
     border-bottom: 1px solid #EEE;
     padding-bottom: 10px;
 }
-.thread img {
+a.img-popup img {
     float: left;
     margin: 0 15px 8px 0;
     overflow: auto;
@@ -15,6 +15,10 @@
     padding: 2px 20px 0 0;
     overflow: auto;
     border-radius: 5px;
+}
+.preview {
+    margin: 0px;
+    border: 1px solid grey;
 }
 .text {
     padding-left: 30px;
@@ -45,4 +49,7 @@ div.grid-border .row {
     display: none;
     padding: 5px;
     border: 1px dotted grey;
+}
+.highlight {
+    background-color: deepskyblue;
 }

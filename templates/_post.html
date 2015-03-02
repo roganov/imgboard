@@ -4,7 +4,7 @@
         <a href="#{{ post.pk }}">#{{ post.pk }}</a>
     </div>
     <div class="text">
-        {% if post.image and post.thumbnail %}<a href="{{ post.image.url }}"><img src="{{ post.thumbnail.url }}"></a>{% endif %}
+        {% if post.image and post.thumbnail %}<a class="img-popup" href="{{ post.image.url }}"><img src="{{ post.thumbnail.url }}"></a>{% endif %}
         {{ post.body | safe }}
     </div>
 </div>

@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic.base import TemplateView
 
-from core.views import board_view, thread_view, markup_view
+from core.views import board_view, thread_view, markup_view, preview
 
 
 urlpatterns = patterns('',
@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^__admin/', include(admin.site.urls)),
 
     url(r'api/markup/', markup_view, name='api-markup'),
+    url(r'api/(\w+)/preview/(t?\d+)/$', preview, name='api-preview'),
     url(r'^about/markup/$', TemplateView.as_view(template_name='markup_syntax.html'), name='syntax'),
     url(r'^(?P<slug>\w+)/(?P<page>\d+/?)?$', board_view, name='board'),
     url(r'^(?P<slug>\w+)/t/(?P<thread_id>\d+)$', thread_view, name='thread'),
