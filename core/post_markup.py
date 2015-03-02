@@ -1,8 +1,7 @@
 from bisect import bisect_left
 from functools import partial
 import re
-from itertools import chain
-
+from itertools import chain, izip
 
 from django.core.urlresolvers import reverse
 
@@ -75,18 +74,12 @@ def replies_to_links(post_body, board):
     return ''.join(merge(texts_with_replies, skip))
 
 def merge(xs, ys):
-    # TODO: make this function less ugly
-    xs, ys = iter(xs), iter(ys)
+    """Yields all values cyclically"""
+    fst, snd = iter(xs), iter(ys)
     while 1:
         try:
-            yield next(xs)
+            yield next(fst)
+            fst, snd = snd, fst
         except StopIteration:
-            for y in ys:
-                yield y
-            break
-        try:
-            yield next(ys)
-        except StopIteration:
-            for x in xs:
-                yield x
-            break
+            yield next(snd)
+            fst, snd = snd, snd
