@@ -2,6 +2,8 @@ from .base import *
 import os
 import dj_database_url
 
+DEBUG = False
+
 INSTALLED_APPS += ('storages',)
 DATABASES = {'default': dj_database_url.config()}
 ALLOWED_HOSTS = ["*"]
