@@ -42,6 +42,7 @@ INSTALLED_APPS = (
 
     # local apps
     'core',
+    'moderators',
 )
 
 MIDDLEWARE_CLASSES = (
