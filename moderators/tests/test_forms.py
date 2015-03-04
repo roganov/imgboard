@@ -4,8 +4,8 @@ from datetime import datetime
 from django.test import TestCase
 from django.forms import ValidationError
 
-from django_nose.tools import *
 from nose.tools import *
+from django_nose.tools import *
 
 from .factories import UserFactory
 from core.tests.factories import ThreadFactory, BoardFactory, PostFactory

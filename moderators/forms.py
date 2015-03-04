@@ -33,7 +33,7 @@ class ModActionForm(forms.ModelForm):
 
         if not obj.board.moderators.filter(pk=self.moderator.pk).exists():
             raise ValidationError(
-                "You do not have the authority to perform this action")
+                "You are not authorized to perform this action")
         return obj
 
     def clean(self):
@@ -49,6 +49,6 @@ class ModActionForm(forms.ModelForm):
 
         if action in ('close', 'pin') and not isinstance(obj, Thread):
             raise ValidationError("Only threads can be closed or pinned")
-    #
-    # def save(self):
-    #     return ModeratorAction.objects.create_action(**self.cleaned_data)
+
+    def save(self):
+        return ModeratorAction.objects.create_action(**self.cleaned_data)
