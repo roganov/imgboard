@@ -13,7 +13,8 @@ import post_markup
 def board_view(request, slug, page=None):
     board = get_object_or_404(Board, slug=slug)
     if request.method == 'POST':
-        form = ThreadForm(request.POST, request.FILES, board=board)
+        form = ThreadForm(request.POST, request.FILES,
+                          board=board, request=request)
         if form.is_valid():
             thread = form.save()
             return HttpResponseRedirect(thread.get_absolute_url())
@@ -27,7 +28,8 @@ def board_view(request, slug, page=None):
 def thread_view(request, slug, thread_id):
     thread = get_object_or_404(Thread.objects.select_related('board'), pk=thread_id)
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES, thread=thread)
+        form = PostForm(request.POST, request.FILES,
+                        thread=thread, request=request)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(thread.get_absolute_url())

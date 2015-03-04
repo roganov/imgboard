@@ -1,4 +1,5 @@
 import uuid
+from django.conf import settings
 from django.core.validators import RegexValidator
 
 from django.db import models
@@ -43,6 +44,7 @@ class Board(models.Model):
     threads_per_page = models.PositiveSmallIntegerField(default=10)
     pages_num = models.PositiveSmallIntegerField(default=10)
     bumplimit = models.PositiveSmallIntegerField(default=500)
+    moderators = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
     objects = BoardManager()
 
@@ -71,6 +73,7 @@ class BasePost(models.Model):
         RegexValidator(regex=r'^\s*$', message='The body may not be empty.', inverse_match=True)
     ])
     body = models.TextField()   # computed raw_body
+    ip = models.GenericIPAddressField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_hidden = models.BooleanField(default=False)  # fake deletion
 
