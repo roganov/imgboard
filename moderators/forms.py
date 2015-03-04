@@ -46,6 +46,8 @@ class ModActionForm(forms.ModelForm):
                 raise ValidationError("You must set `until` date")
             if not obj.ip:
                 raise ValidationError("The object does not have IP field")
+        else:
+            del cleaned_data['until']
 
         if action in ('close', 'pin') and not isinstance(obj, Thread):
             raise ValidationError("Only threads can be closed or pinned")
