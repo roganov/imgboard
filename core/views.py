@@ -3,13 +3,15 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
+from moderators.decorators import check_ban
 from .models import Board, Thread, Post
 from .forms import PostForm, ThreadForm
 
-import markup
-import post_markup
+from . import markup
+from . import post_markup
 
 
+@check_ban
 def board_view(request, slug, page=None):
     board = get_object_or_404(Board, slug=slug)
     if request.method == 'POST':
@@ -25,6 +27,7 @@ def board_view(request, slug, page=None):
     return render(request, 'board.html', {'board': board, 'page': page, 'form': form})
 
 
+@check_ban
 def thread_view(request, slug, thread_id):
     thread = get_object_or_404(Thread.objects.select_related('board'), pk=thread_id)
     if request.method == 'POST':

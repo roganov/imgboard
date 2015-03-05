@@ -1,0 +1,7 @@
+{% extends '_base.html' %}
+{% block title %}Board: banned{% endblock %}
+{% block content %}
+    <h1>You are banned until {{ ban.until }} and  not allowed to post.</h1>
+    <h3>Why?</h3>
+    <p>{{ ban.action.reason | linebreaks }}</p>
+{% endblock %}
