@@ -1,3 +1,4 @@
+{% load firstof from future %}
 <div class="thread-op" id="t{{ thread.pk }}">
     <div class="post-title">
         <a href="{{ thread.get_absolute_url }}"><span class="thread-title"><b>{{ thread.title }}</b> --

@@ -1,7 +1,6 @@
 from mock import patch
 
-from datetime import datetime
-from unittest import skip
+from django.utils import timezone
 from django.test import TestCase
 
 from nose.tools import *
@@ -74,7 +73,7 @@ class ModActManagerTest(TestCase):
         opts = {'content_object': self.t,
                 'reason': 'Reason',
                 'moderator': self.u,
-                'until': datetime.now()}
+                'until': timezone.now()}
         ok_(not self.t.is_hidden)
         mod_action = ModeratorAction.objects.create_ban(**opts)
 

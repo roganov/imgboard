@@ -1,6 +1,6 @@
 import unittest
-from datetime import datetime
 
+from django.utils import timezone
 from django.test import TestCase
 from django.forms import ValidationError
 
@@ -58,7 +58,7 @@ class ModActionFormTest(TestCase):
         assert_in('__all__', form.errors)
 
         # test `ban` action requires IP field on content_object
-        data = {'content_object': "t%s" % t.id, 'until': datetime.now(),
+        data = {'content_object': "t%s" % t.id, 'until': timezone.now(),
                 'action': 'ban', 'reason': 'Reason.'}
         form = ModActionForm(data=data, user=user)
         ok_(not form.is_valid())

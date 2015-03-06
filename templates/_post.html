@@ -1,3 +1,4 @@
+{% load firstof from future %}
 <div id="{{ post.pk }}" class="post">
     <div class="post-title">
         <b>{{ post.title }}</b> -- by {% firstof post.name 'Anonymous' %} -- {{ post.created_at }}
