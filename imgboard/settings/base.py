@@ -77,6 +77,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -88,9 +90,13 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, 'static')
 ]
 
+# Templates
+
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, 'templates'),
 )
+
+# Media files
 
 MEDIA_URL = '/media/'
 

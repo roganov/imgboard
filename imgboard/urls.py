@@ -3,6 +3,8 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic.base import TemplateView
+from django.views.decorators.cache import cache_page
+from core.utils import cache_board_view
 
 from core.views import board_view, thread_view, markup_view, preview
 from moderators.views import moderator_view
@@ -15,14 +17,20 @@ urlpatterns = patterns('',
 
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
     url(r'^__admin/', include(admin.site.urls)),
-    url(r'^about/markup/$', TemplateView.as_view(template_name='markup_syntax.html'), name='syntax'),
+    url(r'^about/markup/$',
+        cache_page(60*10)(TemplateView.as_view(template_name='markup_syntax.html')),
+        # TemplateView.as_view(template_name='markup_syntax.html'),
+        name='syntax'),
 
     url(r'api/markup/', markup_view, name='api-markup'),
     url(r'api/(\w+)/preview/(t?\d+)/$', preview, name='api-preview'),
     url(r'api/moderator/(\w+)/$', moderator_view, name='api-moderator'),
 
 
-    url(r'^(?P<slug>\w+)/(?P<page>\d+/?)?$', board_view, name='board'),
+    url(r'^(?P<slug>\w+)/(?P<page>\d+/?)?$',
+        cache_board_view(None, n_pages=3)(board_view),
+        name='board'),
+
     url(r'^(?P<slug>\w+)/t/(?P<thread_id>\d+)$', thread_view, name='thread'),
 )
 

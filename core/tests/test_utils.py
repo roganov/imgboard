@@ -1,8 +1,10 @@
-from cgi import escape
 import unittest
+
+from cgi import escape
 from nose.tools import *
 
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from core.markup import parse
 from core.post_markup import thread_id_url, post_id_url, replies_to_links
@@ -44,3 +46,29 @@ class TestRepliesToLinks(TestCase):
 
         in_code = "<code>{}</code>".format(escape('>>t1'))
         eq_(replies_to_links(in_code, t.board), in_code)
+
+
+
+@override_settings(CACHES={
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+    }
+})
+class TestCacheBoardView(TestCase):
+    def test(self):
+        thread = ThreadFactory(board=BoardFactory())
+
+        # cold cache
+        with self.assertNumQueries(5):
+            self.client.get(thread.board.get_absolute_url())
+
+        # warm cache
+        with self.assertNumQueries(0):
+            self.client.get(thread.board.get_absolute_url())
+
+        PostFactory(thread=thread)
+
+        # new post invalidated old cache
+        # not 5 as before because one query is cached in template fragment
+        with self.assertNumQueries(4):
+            self.client.get(thread.board.get_absolute_url())

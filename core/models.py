@@ -174,5 +174,6 @@ class Post(BasePost):
         return u"<Post: {}>".format(self.title or self.pk)
 
 
+# FIXME: refactor this shit
 # avoiding circular imports
 from .post_markup import replies_to_links

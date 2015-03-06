@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load core_extras %}
+{% load cache %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -16,6 +17,7 @@
 </head>
 <body>
 <div class="container">
+{% cache 600 page-header %}
     <div class="page-header">
         <h3>List of boards:</h3>
         <div class="row show-grid">
@@ -37,6 +39,7 @@
             </div>
         </div>
     </div>
+{% endcache %}
 {% if board %}
     <h2 class="board-header"><a href="{{ board.get_absolute_url }}">{{ board.title }}</a></h2>
 {% endif %}
