@@ -5,8 +5,18 @@ import dj_database_url
 DEBUG = False
 
 INSTALLED_APPS += ('storages',)
+
 DATABASES = {'default': dj_database_url.config()}
+
 ALLOWED_HOSTS = ["*"]
+
+# templates are cached in production
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
