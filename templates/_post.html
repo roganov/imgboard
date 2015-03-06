@@ -3,9 +3,17 @@
         <b>{{ post.title }}</b> -- by {% firstof post.name 'Anonymous' %} -- {{ post.created_at }}
         <a href="#{{ post.pk }}">#{{ post.pk }}</a>
         <a href="#" class="reply-this">Reply to this</a>
+        {% if is_moderator %}
+            <button type="button" class="js-mod-button btn btn-default btn-xs">Moderate</button>
+        {% endif %}
     </div>
     <div class="text">
-        {% if post.image and post.thumbnail %}<a class="img-popup" href="{{ post.image.url }}"><img src="{{ post.thumbnail.url }}"></a>{% endif %}
+        {% if post.image and post.thumbnail %}
+            <a class="js-img-popup" href="{{ post.image.url }}">
+                <img class="thread-post-img" src="{{ post.thumbnail.url }}">
+            </a>
+        {% endif %}
         {{ post.body | safe }}
+        <div class="clearfix"></div>
     </div>
 </div>

@@ -1,0 +1,43 @@
+<div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Select what you want to do</h4>
+            </div>
+            <form class="form-horizontal" action="{% url 'api-moderator' 'a' %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="content_object" id="content_object">
+                    <div class="form-group">
+                        <label for="action" class="col-sm-2 control-label">Action:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control js-action-select" name="action" id="action">
+                                <option value="close">Close the thread</option>
+                                <option value="pin">Pin the thread</option>
+                                <option value="delete">Delete</option>
+                                <option value="delete_img">Delete media</option>
+                                <option value="ban">Ban the poster</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="action" class="col-sm-2 control-label">Reason:</label>
+                        <div class="col-sm-8">
+                            <textarea name="reason" rows="5" style="width:100%"></textarea>
+                        </div>
+                    </div>
+                    <div class="js-action-until hidden form-group">
+                        <label for="action" class="col-sm-2 control-label">Ban until:</label>
+                        <div class="col-sm-8">
+                            <input class="js-datepicker" type="datetime" name="until">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

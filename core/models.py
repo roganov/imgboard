@@ -48,15 +48,18 @@ class Board(models.Model):
 
     objects = BoardManager()
 
-    @property
-    def max_threads(self):
-        return self.threads_per_page * self.pages_num
-
     def __unicode__(self):
         return u"<Board: %s>" % self.slug
 
     def get_absolute_url(self):
         return reverse('board', kwargs={'slug': self.slug})
+
+    @property
+    def max_threads(self):
+        return self.threads_per_page * self.pages_num
+
+    def moderated_by(self, user):
+        return user.is_authenticated() and self.moderators.filter(pk=user.pk).exists()
 
 
 def image_upload_path(instance, filename):
@@ -86,7 +89,7 @@ class BasePost(models.Model):
     def save(self, *args, **kwargs):
         self.body = replies_to_links(parse(self.raw_body), board=self.board)
 
-        if self.image:
+        if not self.pk and self.image:
             thumb = get_thumbnail(self.image)
             self.image.save(self.image.name, self.image, save=False)
             img_name = self.image.name.split('/')[-1]

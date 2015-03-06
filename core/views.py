@@ -24,7 +24,10 @@ def board_view(request, slug, page=None):
         form = ThreadForm()
     page_num = int(page or '1')
     page = Board.objects.threads_page(page_num, board)
-    return render(request, 'board.html', {'board': board, 'page': page, 'form': form})
+    ctx = {'board': board, 'page': page,
+           'form': form,
+           'is_moderator': board.moderated_by(request.user)}
+    return render(request, 'board.html', ctx)
 
 
 @check_ban
@@ -39,8 +42,10 @@ def thread_view(request, slug, thread_id):
     else:
         form = PostForm()
     posts = thread.post_set.present()
-    return render(request, 'thread.html', {'board': thread.board, 'thread': thread,
-                                           'form': form, 'posts': posts})
+    ctx = {'board': thread.board, 'thread': thread,
+           'form': form, 'posts': posts,
+           'is_moderator': thread.board.moderated_by(request.user)}
+    return render(request, 'thread.html', ctx)
 
 
 @csrf_exempt

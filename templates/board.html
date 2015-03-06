@@ -4,14 +4,8 @@
 {% block content %}
     {% for thread in page.object_list %}
     <div class="thread">
-        <div id="t{{ thread.pk }}">
-        <a  href="{{ thread.get_absolute_url }}"><h4><b>{{ thread.title }}</b> -- by {% firstof thread.name 'Anonymous' %} -- {{ thread.created_at }}</h4></a>
+        {% include '_thread-op.html' %}
 
-        <p>
-            {% if thread.image and thread.thumbnail %}<a class="img-popup" href="{{ thread.image.url }}"><img src="{{ thread.thumbnail.url }}"></a>{% endif %}
-            {{ thread.body | safe }}
-        </p>
-        </div>
         <b>{{ thread.posts_count }} posts total. Showing {{ thread.latest_posts |length }} latest.
             <a href="{{ thread.get_absolute_url }}">Click</a> to view all.</b>
 
@@ -22,6 +16,7 @@
 
         <div class="clearfix"></div>
     </div>
+        <hr>
     {% endfor %}
 
 
@@ -117,4 +112,7 @@
         </div>
 
     </form>
+
+
+    {% include '_moderator-form.html' %}
 {% endblock content %}

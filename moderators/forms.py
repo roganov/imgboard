@@ -49,7 +49,7 @@ class ModActionForm(forms.ModelForm):
         else:
             del cleaned_data['until']
 
-        if action in ('close', 'pin') and not isinstance(obj, Thread):
+        if action in ('close', 'pin') and obj and not isinstance(obj, Thread):
             raise ValidationError("Only threads can be closed or pinned")
 
     def save(self):

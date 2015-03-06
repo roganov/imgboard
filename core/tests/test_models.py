@@ -66,10 +66,10 @@ class TestThread(TestCase):
 
     @override_settings(MEDIA_ROOT='/tmp/')
     def test_save_creates_thumbnail(self):
-        thread = ThreadFactory(board=BoardFactory())
+        board=BoardFactory()
         with open(TEST_PHOTO_PATH) as f:
             img = File(f)
-            thread.image = img
+            thread = Thread(board=board, image=img)
             self.assertFalse(thread.thumbnail)
             thread.save()
         self.assertTrue(thread.thumbnail)

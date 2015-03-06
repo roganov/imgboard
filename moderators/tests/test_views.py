@@ -33,7 +33,7 @@ class ModViewTest(TestCase):
 
         # testing success
         self.client.login(username=u.username, password='password')
-        r = self.client.post(url, data)
+        r = self.client.post(url, data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         resp_text = json.loads(r.content)
         assert_ok(r)
         eq_(resp_text['status'], 'ok')

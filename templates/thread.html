@@ -3,17 +3,7 @@
 {% block title %}Thread: {{ thread.title }}{% endblock %}
 {% block content %}
     <div class="thread">
-        <div id="t{{ thread.pk }}">
-            <div class="post-title">
-                <a href="{{ thread.get_absolute_url }}"><b>{{ thread.title }}</b></a> --
-                by {% firstof thread.name 'Anonymous' %} -- {{ thread.created_at }}
-                <a href="#t{{ thread.pk }}">#t{{ thread.pk }}</a>
-                <a class="reply-this">Reply to this</a>
-            </div>
-            {% if thread.image and thread.thumbnail %}
-                <a class="img-popup" href="{{ thread.image.url }}"><img src="{{ thread.thumbnail.url }}"></a>{% endif %}
-            {{ thread.body | safe }}
-        </div>
+        {% include '_thread-op.html' %}
         {% for post in posts %}
             <br>
             {% include '_post.html' %}
@@ -83,4 +73,7 @@
 
         </form>
     </div>
+
+    {% include '_moderator-form.html' %}
+
 {% endblock %}

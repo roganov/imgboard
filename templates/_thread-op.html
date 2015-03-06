@@ -1,0 +1,17 @@
+<div class="thread-op" id="t{{ thread.pk }}">
+    <div class="post-title">
+        <a href="{{ thread.get_absolute_url }}"><span class="thread-title"><b>{{ thread.title }}</b> --
+            by {% firstof thread.name 'Anonymous' %} -- {{ thread.created_at }}</span> </a>
+        {#                <a href="#t{{ thread.pk }}">#t{{ thread.pk }}</a>#}
+        {#                <a class="reply-this">Reply to this</a>#}
+        {% if is_moderator %}
+            <button type="button" class="js-mod-button btn btn-default btn-sm">Moderate</button>
+        {% endif %}
+    </div>
+    {% if thread.image and thread.thumbnail %}
+        <a class="js-img-popup" href="{{ thread.image.url }}">
+            <img class="thread-post-img" src="{{ thread.thumbnail.url }}">
+        </a>
+    {% endif %}
+    {{ thread.body | safe }}
+</div>

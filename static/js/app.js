@@ -1,4 +1,5 @@
 window.onload = function() {
+    // TODO: tidy up the code and use jQuery
     var btns = [].slice.call(document.querySelectorAll('.markupPreviewBtn'));
     var board_slug = window.location.pathname.match(/\/(\w+)\//)[1];
     function handler(e) {
@@ -20,12 +21,43 @@ window.onload = function() {
         btn.addEventListener('click', handler);
     });
 
+    $(".js-datepicker").datepicker();
+
+    $(".js-action-select").change(function() {
+        if (this.value == 'ban') {
+            $(".js-action-until").removeClass('hidden');
+        }
+        else
+            $(".js-action-until").addClass('hidden');
+    });
+
+    $("body").on('click', '.js-mod-button', function(e) {
+        var $this = $(this);
+        var parent = $this.closest('.post');
+        if (!parent.length) {
+            parent = $this.closest('.thread-op');
+            if (!parent.length)
+                return;
+        }
+        var id = parent.attr('id');
+        $('#content_object').val(id);
+
+        var form = $('#modal-form');
+        if (id[0] == 't')
+            $(".js-action-select option[value='close'],option[value='pin']").prop('disabled', false);
+        else {
+            $(".js-action-select option[value='close'],option[value='pin']").prop('disabled', true);
+            $(".js-action-select").val('ban');
+        }
+        $('#modal-form').modal();
+    });
+
     $(".reply-this").click(function(e) {
         e.preventDefault();
         var replyToId = $(this).parent().parent().attr('id');
         var textarea = $('form textarea');
         textarea.val(textarea.val() + ">>" + replyToId + "\n").focus();
-    })
+    });
 
     $("body").on('mouseenter', '.reply', function(e) {
         var $this = $(this);
