@@ -77,6 +77,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = '/'
 # Sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
@@ -94,6 +95,17 @@ STATICFILES_DIRS = [
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, 'templates'),
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.request",
 )
 
 # Media files

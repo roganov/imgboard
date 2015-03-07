@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import cache_page
 from core.utils import cache_board_view
@@ -21,6 +22,9 @@ urlpatterns = patterns('',
         cache_page(60*10)(TemplateView.as_view(template_name='markup_syntax.html')),
         # TemplateView.as_view(template_name='markup_syntax.html'),
         name='syntax'),
+    url(r'^about/login/$', login,
+        {'template_name': 'moderator-login.html'}, name='login'),
+    url(r'^about/logout/$', logout, name='logout'),
 
     url(r'api/markup/', markup_view, name='api-markup'),
     url(r'api/(\w+)/preview/(t?\d+)/$', preview, name='api-preview'),

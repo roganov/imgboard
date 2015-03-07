@@ -47,3 +47,23 @@ class ModViewTest(TestCase):
         assert_code(r, 400)
         eq_(resp_text['status'], 'error')
         assert_in('content_object', resp_text['errors'])
+
+
+class TestLoginLogoutViews(TestCase):
+    def test(self):
+        u = UserFactory()
+        t = ThreadFactory(board=BoardFactory())
+        t.board.moderators.add(u)
+        t.board.save()
+
+        r = self.client.get(t.get_absolute_url())
+        assert_not_in('Moderate', r.content)
+
+        self.client.post(reverse('login'), {'username': u.username, 'password': 'password'})
+        r = self.client.get(t.get_absolute_url())
+        assert_in('Moderate', r.content)
+        assert_in('Logout', r.content)
+
+        r = self.client.get(reverse('logout'))
+        r = self.client.get(t.get_absolute_url())
+        assert_not_in('Moderate', r.content)

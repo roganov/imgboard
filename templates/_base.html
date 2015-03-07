@@ -17,6 +17,9 @@
 </head>
 <body>
 <div class="container">
+    {% if user.is_authenticated %}
+        <a class="pull-right" href="{% url 'logout' %}?next={{ request.path }}">Logout</a>
+    {% endif %}
 {% cache 600 page-header %}
     <div class="page-header">
         <h3>List of boards:</h3>
