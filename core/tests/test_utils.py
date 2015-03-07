@@ -72,3 +72,13 @@ class TestCacheBoardView(TestCase):
         # not 5 as before because one query is cached in template fragment
         with self.assertNumQueries(4):
             self.client.get(thread.board.get_absolute_url())
+
+    def test_new_thread_purges_cache(self):
+        thread1 = ThreadFactory(board=BoardFactory(), title='Thread1')
+        r = self.client.get(thread1.board.get_absolute_url())
+        assert_in('Thread1', r.content)
+
+        thread2 = ThreadFactory(board=thread1.board, title='Thread2')
+        r = self.client.get(thread1.board.get_absolute_url())
+        assert_in('Thread1', r.content)
+        assert_in('Thread2', r.content)

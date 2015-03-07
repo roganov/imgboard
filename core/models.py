@@ -44,7 +44,7 @@ class Board(models.Model):
     threads_per_page = models.PositiveSmallIntegerField(default=10)
     pages_num = models.PositiveSmallIntegerField(default=10)
     bumplimit = models.PositiveSmallIntegerField(default=500)
-    moderators = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    moderators = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
 
     objects = BoardManager()
 

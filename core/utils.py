@@ -27,8 +27,9 @@ def cache_board_view(timeout, n_pages):
        Also connects to post_save signal to remove affected keys.
     """
     @receiver(post_save, sender=get_model('core', 'Post'), weak=False)
+    @receiver(post_save, sender=get_model('core', 'Thread'), weak=False)
     def expire_affected_keys(sender, instance, **kwargs):
-        slug = instance.thread.board.slug
+        slug = instance.board.slug  # .board works for both Post and Thread
         keys = ['{}:{}'.format(slug, i) for i in range(1, n_pages+1)]
         cache.delete_many(keys)
 
