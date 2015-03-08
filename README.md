@@ -10,6 +10,7 @@ Imageboard is a system of anonymous forums with the ability to attach an image t
 - Superuser can create moderators for each board
 - Moderators can pin, close or delete threads, delete posts and ban the poster (by ip)
 - Pinned threads occupy the top position and never get purged
+- You can reference other posts using `>><id>` syntax
 
 ## Installation
 CPython 2.7.* is required
