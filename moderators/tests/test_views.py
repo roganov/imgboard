@@ -13,7 +13,7 @@ from .factories import UserFactory
 class ModViewTest(TestCase):
     # Dunno if I need to test all the actions
     # since they've been tested in the model manager and the form.
-    # For now I'll test the deletion (actually hiding).
+    # For now I'll test the deletion (which is actually hiding).
     def test_delete(self):
         t = ThreadFactory(board=BoardFactory())
         p = PostFactory(thread=t)
@@ -43,8 +43,13 @@ class ModViewTest(TestCase):
         # testing with not valid content_object
         data['content_object'] = 123
         r = self.client.post(url, data)
-        resp_text = json.loads(r.content)
+        eq_(r['Content-Type'], 'text/html; charset=utf-8')
         assert_code(r, 400)
+
+        r = self.client.post(url, data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        eq_(r['Content-Type'], 'application/json')
+        assert_code(r, 400)
+        resp_text = json.loads(r.content)
         eq_(resp_text['status'], 'error')
         assert_in('content_object', resp_text['errors'])
 

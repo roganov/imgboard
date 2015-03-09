@@ -61,7 +61,7 @@ class ModeratorAction(models.Model):
         ('close', 'Close the thread'),
         ('pin', 'Pin the thread'),
         ('delete', 'Delete this thread or post'),
-        ('del_img', 'Delete img'),
+        ('delete_img', 'Delete img'),
         ('ban', 'Ban the author'),
     )
     action = models.CharField(max_length=100,
