@@ -91,7 +91,9 @@ window.onload = function() {
         var leftPreview = $(e.toElement || e.relatedTarget).closest('.post');
         if (!leftPreview.hasClass('preview')) {
         }
-    })
+    });
+
+    ThumbnailPopup('.js-img-popup');
 };
 
 function removeAfter(node) {
