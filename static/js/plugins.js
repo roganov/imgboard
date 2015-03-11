@@ -1,10 +1,7 @@
 var ThumbnailPopup = (function() {
-    function ThumbnailPopup(params) {
-        //var selector = params.selector;
-        var selector = params;
+    function ThumbnailPopup(selector) {
         $(document.body).on('click', selector, displayImage);
     }
-
 
     function displayLoadedImage(e) {
         var $img = $(this);
@@ -31,6 +28,10 @@ var ThumbnailPopup = (function() {
         e.preventDefault();
         var $img = $(document.createElement('img'));
         $img.on('load', displayLoadedImage);
+        // draggable must go BEFORE click
+        $img.draggable({
+            scroll: false
+        });
         $img.click(function(e) {
             $(this).remove();
         });
