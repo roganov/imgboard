@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext as _
 
 from ipware.ip import get_real_ip
 from .models import Post, Thread
@@ -34,6 +36,10 @@ class PostForm(forms.ModelForm):
 
     def clean_ip(self):
         return get_real_ip(self.request)
+
+    def clean(self):
+        if self.thread.is_closed:
+            raise ValidationError(_('The thread is closed'), code='closed')
 
     def save(self):
         return Post.objects.create(thread=self.thread, **self.cleaned_data)

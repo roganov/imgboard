@@ -12,6 +12,9 @@
         <div class="clearfix"></div>
         <br>
 
+    {% if thread.is_closed %}
+        <h3>The thread has been closed</h3>
+    {% else %}
     <h3>New post</h3>
         <form id="form" class="form" method="POST" action="#form" enctype="multipart/form-data">{% csrf_token %}
             <div class="row">
@@ -73,6 +76,7 @@
             </div>
 
         </form>
+    {% endif %}
     </div>
 
     {% include '_moderator-form.html' %}

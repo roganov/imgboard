@@ -79,7 +79,7 @@ class TestThread(TestCase):
 
 
 class TestPost(TestCase):
-    def test_create_bumps_post_increments_count(self):
+    def test_create_bumps_post_and_increments_count(self):
         b = BoardFactory()
         t = ThreadFactory(board=b)
         old_bumped = t.bumped_at
