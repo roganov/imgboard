@@ -1,10 +1,73 @@
 var ThumbnailPopup = (function() {
+    var arrowSize = 40;
+    var rArrowCSS = {
+        position: 'fixed',
+        width: 0,
+        height: 0,
+        right: 0,
+        top: $(window).height()/2 - arrowSize,
+        'border-top': arrowSize/2 + 'px solid transparent',
+        'border-bottom': arrowSize/2 + 'px solid transparent',
+        'border-left': arrowSize + 'px solid black'
+    };
+    var lArrowCSS = {
+        position: 'fixed',
+        width: 0,
+        height: 0,
+        left: 0,
+        top: $(window).height()/2 - arrowSize,
+        'border-top': arrowSize/2 + 'px solid transparent',
+        'border-bottom': arrowSize/2 + 'px solid transparent',
+        'border-right': arrowSize + 'px solid black'
+    };
+
     function ThumbnailPopup(selector) {
-        $(document.body).on('click', selector, displayImage);
+        this.selector = selector;
+        var that = this
+        $(document.body).on('click', selector, function(e) {
+            e.preventDefault();
+            that.displayImage($(e.currentTarget), true);
+        });
     }
 
-    function displayLoadedImage(e) {
-        var $img = $(this);
+    ThumbnailPopup.prototype.displayImage = function($a, arrows) {
+        if (arrows) {
+            this.lArrow = $(document.createElement('div'))
+                .css(lArrowCSS).appendTo(document.body)
+                .click($.proxy(this.displayPrev, this));
+            this.rArrow = $(document.createElement('div'))
+                .css(rArrowCSS).appendTo(document.body)
+                .click($.proxy(this.displayNext, this));
+        }
+        this.$a = $a;
+        var $img = this.$img = $(document.createElement('img'));
+        $img.on('load', $.proxy(this.displayLoadedImage, this));
+        $img.attr('src', this.$a.attr('href'));
+        // draggable must go BEFORE click
+        $img.draggable({
+            scroll: false
+        });
+        $img.click($.proxy(this.destroy, this));
+        $img.on('wheel', $.proxy(this.scaleImage, this));
+    };
+    ThumbnailPopup.prototype.displayNext = function(e) {
+        this.displayNth(1);
+    };
+    ThumbnailPopup.prototype.displayPrev = function(e) {
+        this.displayNth(-1);
+    };
+    ThumbnailPopup.prototype.displayNth = function(n) {
+        var index = $(this.selector).index(this.$a) + n;
+        if (index < 0)
+            return;
+        var next = $(this.selector + ":eq(" + index + ")");
+        if (next.length) {
+            this.$img.remove();
+            this.displayImage(next);
+        }
+    }
+    ThumbnailPopup.prototype.displayLoadedImage = function(e) {
+        var $img = this.$img;
         $img.appendTo(document.body);
         var clientH = $(window).height(),
             clientW = $(window).width(),
@@ -22,26 +85,11 @@ var ThumbnailPopup = (function() {
             height: rFrame.height,
             width: rFrame.width
         });
-    }
+    };
 
-    function displayImage(e) {
+    ThumbnailPopup.prototype.scaleImage = function(e) {
         e.preventDefault();
-        var $img = $(document.createElement('img'));
-        $img.on('load', displayLoadedImage);
-        // draggable must go BEFORE click
-        $img.draggable({
-            scroll: false
-        });
-        $img.click(function(e) {
-            $(this).remove();
-        });
-        $img.on('wheel', scaleImage);
-        $img.attr('src', $(this).attr('href'));
-    }
-
-    function scaleImage(e) {
-        e.preventDefault();
-        var $img = $(this);
+        var $img = this.$img;
         var delta = e.originalEvent.deltaY > 0? -20: 20;
         var ratio = $img.data('ratio');
         $img.css({
@@ -50,12 +98,18 @@ var ThumbnailPopup = (function() {
             height: parseInt($img.css('height'), 10) + ratio*delta,
             width: parseInt($img.css('width'), 10) + delta
         });
-    }
+    };
+
+    ThumbnailPopup.prototype.destroy = function() {
+        this.$img.remove();
+        this.lArrow.remove();
+        this.rArrow.remove();
+    };
 
     function fitFrame(dx, dy, width, height) {
         var ratio = Math.max(1, dx/width, dy/height);
         return {width: dx/ratio, height: dy/ratio};
     }
 
-    return ThumbnailPopup;
+    return function(selector) {return new ThumbnailPopup(selector)};
 })();
