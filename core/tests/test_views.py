@@ -69,6 +69,16 @@ class TestThreadView(TestCase):
         eq_(thread, r.context['thread'])
         assert_ok(r)
 
+    def test_cannot_view_hidden_thread(self):
+        thread = ThreadFactory(board=BoardFactory())
+        r = self.client.get(thread.get_absolute_url())
+        assert_ok(r)
+        thread.is_hidden = True
+        thread.save()
+        r = self.client.get(thread.get_absolute_url())
+        assert_code(r, 404)
+
+
     @override_settings(MEDIA_ROOT='/tmp')
     def test_post(self):
         thread = ThreadFactory(board=BoardFactory())

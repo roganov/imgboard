@@ -38,7 +38,7 @@ def board_view(request, slug, page=None):
 @captcha_every_n
 @check_ban
 def thread_view(request, slug, thread_id):
-    thread = get_object_or_404(Thread.objects.select_related('board'), pk=thread_id)
+    thread = get_object_or_404(Thread.objects.visible().select_related('board'), pk=thread_id)
     if request.method == 'POST':
         with_captcha = request.session.get('posts_before_captcha', 0) == 0
         form = PostForm(request.POST, request.FILES,
