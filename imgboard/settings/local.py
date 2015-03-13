@@ -10,3 +10,4 @@ DATABASES = {
         'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
         }
 }
+ENABLE_RECAPTCHA = True

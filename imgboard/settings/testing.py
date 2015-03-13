@@ -16,3 +16,4 @@ DATABASES = {
         'NAME': ':memory:'
         }
 }
+ENABLE_RECAPTCHA = False

@@ -33,3 +33,5 @@ AWS_HEADERS = {
     'Cache-Control': 'max-age=31556926'
 }
 MEDIA_URL = 'http://imgboard-bucket-2.s3-eu-west-1.amazonaws.com/'
+
+ENABLE_RECAPTCHA = True
