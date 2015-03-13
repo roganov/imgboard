@@ -32,6 +32,7 @@ window.onload = function() {
     });
 
     $("body").on('click', '.js-mod-button', function(e) {
+        $(".js-action-until").addClass('hidden');
         var $this = $(this);
         var parent = $this.closest('.post');
         if (!parent.length) {
@@ -47,7 +48,7 @@ window.onload = function() {
             $(".js-action-select option[value='close'],option[value='pin']").prop('disabled', false);
         else {
             $(".js-action-select option[value='close'],option[value='pin']").prop('disabled', true);
-            $(".js-action-select").val('ban');
+            $(".js-action-select").val('delete');
         }
         $('#modal-form').modal();
     });

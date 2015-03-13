@@ -76,3 +76,6 @@ body {
   background-color: #f5f5f5;
 }
 /* End sticky foter */
+#modal-form {
+    z-index: 2;
+}

@@ -15,22 +15,25 @@
                             <select class="form-control js-action-select" name="action" id="action">
                                 <option value="close">Close the thread</option>
                                 <option value="pin">Pin the thread</option>
-                                <option value="delete">Delete</option>
-                                <option value="delete_img">Delete media</option>
                                 <option value="ban">Ban the poster</option>
+                                <option value="delete_img">Delete media</option>
+                                <option value="delete" selected="selected">Delete</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="action" class="col-sm-2 control-label">Reason:</label>
                         <div class="col-sm-8">
-                            <textarea name="reason" rows="5" style="width: 100%;" required="required"></textarea>
+                            <textarea class="form-control" name="reason" rows="5" style="width: 100%;" required="required"></textarea>
                         </div>
                     </div>
                     <div class="js-action-until hidden form-group">
                         <label for="action" class="col-sm-2 control-label">Ban until:</label>
                         <div class="col-sm-8">
-                            <input class="js-datepicker" type="datetime" name="until">
+                            <div class="input-group">
+                                <input class="js-datepicker form-control" type="text" name="until">
+                                <span class="input-group-addon glyphicon glyphicon-calendar" area-hidden="true"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
