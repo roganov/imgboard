@@ -47,7 +47,7 @@ def captcha_every_n(f):
     @wraps(f)
     def wrapper(request, *args, **kwargs):
         response = f(request, *args, **kwargs)
-        if request.method == 'POST':
+        if request.method == 'POST' and settings.ENABLE_RECAPTCHA:
             bc = request.session.get('posts_before_captcha', 0)
             if bc <= 0:
                 request.session['posts_before_captcha'] = new_bc = settings.CAPTCHA_EVERY_N - 1

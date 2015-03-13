@@ -183,3 +183,21 @@ function isScrolledIntoView(elem)
 
     return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 }
+
+var reCaptcha = {
+    init: function () {
+        if (! /captcha=0/.test(document.cookie) ) {
+            var capField = $('.g-recaptcha');
+            grecaptcha.render(capField[0], {
+                'sitekey': capField.data('sitekey')
+            });
+            var form = capField.closest('form');
+            form.on('submit', function(e) {
+                if (grecaptcha.getResponse().length <= 0) {
+                    e.preventDefault();
+                }
+            });
+        }
+    }
+};
+var initReCaptcha = reCaptcha.init;
