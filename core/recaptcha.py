@@ -1,3 +1,4 @@
+from functools import wraps
 import json
 from urllib import urlencode
 import urllib2
@@ -13,7 +14,7 @@ def verify(response):
     resp = urllib2.urlopen(verify_url, urlencode({
         'secret': secret,
         'response': response
-    }))
+    })).read()
     return json.loads(resp)['success']
 
 class ReCaptchaWidget(forms.widgets.Widget):
@@ -42,3 +43,16 @@ class ReCaptchaField(forms.CharField):
             raise ValidationError(self.default_error_messages[code], code=code)
         return value
 
+def captcha_every_n(f):
+    @wraps(f)
+    def wrapper(request, *args, **kwargs):
+        response = f(request, *args, **kwargs)
+        if request.method == 'POST':
+            bc = request.session.get('posts_before_captcha', 0)
+            if bc <= 0:
+                request.session['posts_before_captcha'] = new_bc = settings.CAPTCHA_EVERY_N - 1
+            else:
+                request.session['posts_before_captcha'] = new_bc = bc - 1
+            response.set_cookie('captcha', 1 if new_bc == 0 else 0)
+        return response
+    return wrapper

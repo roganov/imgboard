@@ -10,4 +10,7 @@ DATABASES = {
         'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
         }
 }
+
 ENABLE_RECAPTCHA = True
+# FIXME: should be private
+RECAPTCHA_KEY = '6LfXZgMTAAAAAJGqyJQLeTQlfRWUOcR8f0Y-WRh1'

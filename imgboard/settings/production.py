@@ -35,3 +35,4 @@ AWS_HEADERS = {
 MEDIA_URL = 'http://imgboard-bucket-2.s3-eu-west-1.amazonaws.com/'
 
 ENABLE_RECAPTCHA = True
+RECAPTCHA_KEY = os.environ['RECAPTCHA_KEY']

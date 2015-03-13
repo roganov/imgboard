@@ -6,20 +6,25 @@ from django.views.decorators.http import require_POST, require_GET
 from moderators.decorators import check_ban
 from .models import Board, Thread, Post
 from .forms import PostForm, ThreadForm
+from .recaptcha import captcha_every_n
 
 from . import markup
 from . import post_markup
 
 
+@captcha_every_n
 @check_ban
 def board_view(request, slug, page=None):
     board = get_object_or_404(Board, slug=slug)
     if request.method == 'POST':
+        with_captcha = request.session.get('posts_before_captcha', 0) == 0
         form = ThreadForm(request.POST, request.FILES,
-                          board=board, request=request)
+                          board=board, request=request,
+                          with_captcha=with_captcha)
         if form.is_valid():
             thread = form.save()
-            return HttpResponseRedirect(thread.get_absolute_url())
+            response = HttpResponseRedirect(thread.get_absolute_url())
+            return response
     else:
         form = ThreadForm()
     page_num = int(page or '1')
@@ -30,12 +35,15 @@ def board_view(request, slug, page=None):
     return render(request, 'board.html', ctx)
 
 
+@captcha_every_n
 @check_ban
 def thread_view(request, slug, thread_id):
     thread = get_object_or_404(Thread.objects.select_related('board'), pk=thread_id)
     if request.method == 'POST':
+        with_captcha = request.session.get('posts_before_captcha', 0) == 0
         form = PostForm(request.POST, request.FILES,
-                        thread=thread, request=request)
+                        thread=thread, request=request,
+                        with_captcha=with_captcha)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(thread.get_absolute_url())

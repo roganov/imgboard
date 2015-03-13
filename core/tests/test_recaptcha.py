@@ -6,6 +6,7 @@ import mock
 from django import forms
 from django import test
 from core import recaptcha
+from core.recaptcha import captcha_every_n
 
 from ..recaptcha import ReCaptchaField
 
