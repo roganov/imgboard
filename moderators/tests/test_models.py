@@ -57,6 +57,16 @@ class ModActManagerTest(TestCase):
         obj = Thread.objects.get(pk=self.t.pk)
         ok_(obj.is_hidden)
 
+    def test_create_delete_decrements_posts_count(self):
+        opts = {'content_object': self.p,
+                'reason': 'Reason',
+                'moderator': self.u}
+        t = Thread.objects.get(pk=self.t.pk)
+        eq_(t.posts_count, 1)
+        mod_action = ModeratorAction.objects.create_delete(**opts)
+        updated_t = Thread.objects.get(pk=self.t.pk)
+        eq_(updated_t.posts_count, 0)
+
     def test_create_delete_img(self):
         opts = {'content_object': self.t,
                 'reason': 'Reason',

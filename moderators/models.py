@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models, transaction
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import F
+
 
 class ModeratorActionManager(models.Manager):
     # dispatcher
@@ -31,6 +33,10 @@ class ModeratorActionManager(models.Manager):
         kwargs['action'] = 'delete'
         mod_action = self.create(*args, **kwargs)
         mod_action.content_object.is_hidden = True
+        # the (denormalized) `posts_count` field must be update
+        if mod_action.content_type.model == 'post':
+            mod_action.content_object.thread.posts_count = F('posts_count') - 1
+            mod_action.content_object.thread.save()
         mod_action.content_object.save()
         return mod_action
 
