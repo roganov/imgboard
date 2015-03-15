@@ -1,4 +1,6 @@
 var ThumbnailPopup = (function() {
+    "use strict";
+
     var arrowSize = 40;
     var rArrowCSS = {
         position: 'fixed',
@@ -23,7 +25,7 @@ var ThumbnailPopup = (function() {
 
     function ThumbnailPopup(selector) {
         this.selector = selector;
-        var that = this
+        var that = this;
         $(document.body).on('click', selector, function(e) {
             e.preventDefault();
             that.displayImage($(e.currentTarget), true);
@@ -58,14 +60,15 @@ var ThumbnailPopup = (function() {
     };
     ThumbnailPopup.prototype.displayNth = function(n) {
         var index = $(this.selector).index(this.$a) + n;
-        if (index < 0)
+        if (index < 0) {
             return;
+        }
         var next = $(this.selector + ":eq(" + index + ")");
         if (next.length) {
             this.$img.remove();
             this.displayImage(next);
         }
-    }
+    };
     ThumbnailPopup.prototype.displayLoadedImage = function(e) {
         var $img = this.$img;
         $img.appendTo(document.body);
@@ -111,5 +114,5 @@ var ThumbnailPopup = (function() {
         return {width: dx/ratio, height: dy/ratio};
     }
 
-    return function(selector) {return new ThumbnailPopup(selector)};
+    return function(selector) {return new ThumbnailPopup(selector);};
 })();
