@@ -6,3 +6,4 @@ htmlcov
 media
 environ.ini
 collectedstatic
+node_modules
