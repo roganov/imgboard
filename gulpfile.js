@@ -61,17 +61,21 @@ gulp.task('jquery', function() {
 
 gulp.task('js', function() {
     gulp.src(jsFiles)
-        .pipe($.if('/**/*.coffee', $.coffee()))
+        .pipe($.if(/\.coffee$/, $.coffee()))
+        .pipe($.sourcemaps.init())
         .pipe($.concat('app.js'))
         .pipe($.uglify())
+        .pipe($.sourcemaps.write('./'))
         .pipe(gulp.dest(destJS));
 });
 
 gulp.task('css', function() {
     gulp.src(cssFiles)
         .pipe($.if(/\.less$/, $.less()))
+        .pipe($.sourcemaps.init())
         .pipe($.concat('style.css'))
         .pipe($.minifyCss())
+        .pipe($.sourcemaps.write('./'))
         .pipe(gulp.dest(destCSS));
 });
 
