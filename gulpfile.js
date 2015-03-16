@@ -17,7 +17,8 @@ var vendor = {
 };
 
 var src = {
-    js: [staticSrc + 'js/!(app.js|app.coffee)',
+    js: [staticSrc + 'js/common.+(js|coffee)',
+         staticSrc + 'js/!(app.js|app.coffee)',
          staticSrc + 'js/+(app.js|app.coffee)'],
     css: [staticSrc + 'css/style.less']
 };

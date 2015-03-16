@@ -1,4 +1,4 @@
-var ThumbnailPopup = (function() {
+var attachGallery = (function() {
     "use strict";
 
     var arrowSize = 40;
