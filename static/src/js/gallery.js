@@ -28,7 +28,12 @@ var attachGallery = (function() {
         var that = this;
         $(document.body).on('click', selector, function(e) {
             e.preventDefault();
-            that.displayImage($(e.currentTarget), true);
+            var withArrows = true;
+            if (that.$img) {
+                that.closeImg();
+                withArrows = false;
+            }
+            that.displayImage($(e.currentTarget), withArrows);
         });
     }
 
@@ -65,9 +70,13 @@ var attachGallery = (function() {
         }
         var next = $(this.selector + ":eq(" + index + ")");
         if (next.length) {
-            this.$img.remove();
+            this.closeImg();
             this.displayImage(next);
         }
+    };
+    ThumbnailPopup.prototype.closeImg = function() {
+        this.$img.remove();
+        this.$img = null;
     };
     ThumbnailPopup.prototype.displayLoadedImage = function(e) {
         var $img = this.$img;
@@ -104,7 +113,7 @@ var attachGallery = (function() {
     };
 
     ThumbnailPopup.prototype.destroy = function() {
-        this.$img.remove();
+        this.closeImg();
         this.lArrow.remove();
         this.rArrow.remove();
     };
