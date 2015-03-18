@@ -156,6 +156,10 @@ class PostsManager(models.Manager):
         post.thread = thread
         return post
 
+    def new_posts(self, latest_id, thread_id, board_slug):
+        return self.filter(thread_id=thread_id, thread__board__slug=board_slug,
+                           id__gt=latest_id).present()
+
 class PostsQuerySet(models.QuerySet):
     def present(self):
         # ordering by id since it corresponds the order of posting

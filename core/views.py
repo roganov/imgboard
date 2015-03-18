@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponseRedirect, JsonResponse
+from django.template import Context
+from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
@@ -71,3 +73,17 @@ def preview(request, slug, id_):
     else:
         prev = get_object_or_404(Post, thread__board__slug=slug, pk=id_)
     return render_to_response('_post.html', {'post': prev})
+
+@csrf_exempt
+@require_GET
+def new_posts_view(request, slug, thread_id):
+    latest_post_id = request.GET.get('latest_id')
+    if latest_post_id is None or not latest_post_id.isdigit():
+        latest_post_id = -1  # get all posts
+    new_posts = Post.objects.new_posts(latest_id=latest_post_id,
+                                       thread_id=thread_id,
+                                       board_slug=slug)
+    t = get_template('_post.html')
+    posts = [t.render(Context({'post': post}))
+             for post in new_posts]
+    return JsonResponse({'posts': posts})
