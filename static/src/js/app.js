@@ -33,7 +33,7 @@ function showRenderedMarkup(e) {
 var reCaptcha = {
     init: function () {
         'use strict';
-        if (! /captcha=0/.test(document.cookie) ) {
+        if ( /captcha=1/.test(document.cookie) ) {
             var capField = $('.g-recaptcha');
             grecaptcha.render(capField[0], {
                 'sitekey': capField.data('sitekey')
