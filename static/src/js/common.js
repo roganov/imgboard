@@ -14,5 +14,9 @@ function isScrolledIntoView(elem) {
 
 function getBoardSlug() {
     'use strict';
-    return window.location.pathname.match(/\/(\w+)\//)[1];
+    return window.location.pathname.match(/^\/(\w+)/)[1];
+}
+function getThreadId() {
+    'use strict';
+    return window.location.pathname.match(/^\/\w+\/t\/(\d+)/)[1];
 }

@@ -8,6 +8,7 @@ $(function() {
 
     ModeratorModal.init();
     ReplyPopups.init();
+    NewPosts.init();
 });
 
 function showRenderedMarkup(e) {

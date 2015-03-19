@@ -8,10 +8,7 @@
             <br>
             {% include '_post.html' %}
         {% endfor %}
-
-        <div class="clearfix"></div>
-        <br>
-
+    </div>
     {% if thread.is_closed %}
         <h3>The thread has been closed</h3>
     {% else %}
@@ -70,7 +67,7 @@
             </div>
             <div class="row">
                 <div class="form-group">
-                    <div class="col-xs-offset-1 col-xs-4 g-recaptcha" data-sitekey="6LfXZgMTAAAAAPpxxIvNScWYY3d1IZU0qQWWF3n0"></div>
+                    <div class="col-xs-offset-1 g-recaptcha" data-sitekey="6LfXZgMTAAAAAPpxxIvNScWYY3d1IZU0qQWWF3n0"></div>
                 </div>
             </div>
             <div class="form-group">
@@ -82,7 +79,6 @@
 
         </form>
     {% endif %}
-    </div>
 
     {% include '_moderator-form.html' %}
 
