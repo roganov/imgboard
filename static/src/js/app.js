@@ -35,10 +35,13 @@ var reCaptcha = {
         'use strict';
         if ( /captcha=1/.test(document.cookie) ) {
             var capField = $('.g-recaptcha');
+            var form = capField.closest('form');
+            if (form.length < 1) {
+                return;
+            }
             grecaptcha.render(capField[0], {
                 'sitekey': capField.data('sitekey')
             });
-            var form = capField.closest('form');
             form.on('submit', function(e) {
                 if (grecaptcha.getResponse().length <= 0) {
                     e.preventDefault();
