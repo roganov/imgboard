@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     # 'debug_toolbar',
 
     # local apps
+    'misc',
     'core',
     'moderators',
 )

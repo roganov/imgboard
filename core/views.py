@@ -8,9 +8,8 @@ from django.views.decorators.http import require_POST, require_GET
 from moderators.decorators import check_ban
 from .models import Board, Thread, Post
 from .forms import PostForm, ThreadForm
-from .recaptcha import captcha_every_n
-
-from . import markup
+from misc.recaptcha import captcha_every_n
+from misc import markup
 from . import post_markup
 
 

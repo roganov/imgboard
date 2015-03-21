@@ -1,7 +1,7 @@
 import uuid
+
 from django.conf import settings
 from django.core.validators import RegexValidator
-
 from django.db import models
 from django.db import transaction
 from django.db.models import F, Prefetch
@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 
 from .utils import get_thumbnail
-from .markup import parse
+from misc.markup import parse
 
 
 class BoardManager(models.Manager):

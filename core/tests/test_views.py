@@ -10,7 +10,7 @@ from nose.tools import *
 import mock
 
 from ..models import Post
-from ..markup import parse
+from misc.markup import parse
 from .factories import BoardFactory, ThreadFactory, PostFactory
 
 
