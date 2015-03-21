@@ -1,14 +1,28 @@
 $(function() {
     "use strict";
-    $('.markupPreviewBtn').click(showRenderedMarkup);
+    var BOARD = /^\/(\w+)(?:\/(\d+))?\/?$/,
+        THREAD = /^\/(\w+)\/t\/(\d+)\/?$/,
+        reserved = ['about'],
+        path = location.pathname,
+        m;
+    if ((m = BOARD.exec(path))) {
+        if (reserved.indexOf(m[1]) > 0) {
+            return;
+        }
+        $('.markupPreviewBtn').click(showRenderedMarkup);
+        $(".js-datepicker").datepicker();
+        attachGallery('.js-img-popup');
+        ModeratorModal.init();
+        ReplyPopups.init();
+    } else if ((m = THREAD.exec(path))) {
+        $('.markupPreviewBtn').click(showRenderedMarkup);
+        $(".js-datepicker").datepicker();
+        attachGallery('.js-img-popup');
+        ModeratorModal.init();
+        ReplyPopups.init();
+        NewPosts.init();
+    }
 
-    $(".js-datepicker").datepicker();
-
-    attachGallery('.js-img-popup');
-
-    ModeratorModal.init();
-    ReplyPopups.init();
-    NewPosts.init();
 });
 
 function showRenderedMarkup(e) {
@@ -36,9 +50,6 @@ var reCaptcha = {
         if ( /captcha=1/.test(document.cookie) ) {
             var capField = $('.g-recaptcha');
             var form = capField.closest('form');
-            if (form.length < 1) {
-                return;
-            }
             grecaptcha.render(capField[0], {
                 'sitekey': capField.data('sitekey')
             });
