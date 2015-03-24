@@ -1,13 +1,28 @@
 $(function() {
     "use strict";
-    $('.markupPreviewBtn').click(showRenderedMarkup);
+    var BOARD = /^\/(\w+)(?:\/(\d+))?\/?$/,
+        THREAD = /^\/(\w+)\/t\/(\d+)\/?$/,
+        reserved = ['about'],
+        path = location.pathname,
+        m;
+    if ((m = BOARD.exec(path))) {
+        if (reserved.indexOf(m[1]) > 0) {
+            return;
+        }
+        $('.markupPreviewBtn').click(showRenderedMarkup);
+        $(".js-datepicker").datepicker();
+        attachGallery('.js-img-popup');
+        ModeratorModal.init();
+        ReplyPopups.init();
+    } else if ((m = THREAD.exec(path))) {
+        $('.markupPreviewBtn').click(showRenderedMarkup);
+        $(".js-datepicker").datepicker();
+        attachGallery('.js-img-popup');
+        ModeratorModal.init();
+        ReplyPopups.init();
+        NewPosts.init();
+    }
 
-    $(".js-datepicker").datepicker();
-
-    attachGallery('.js-img-popup');
-
-    ModeratorModal.init();
-    ReplyPopups.init();
 });
 
 function showRenderedMarkup(e) {
@@ -32,12 +47,12 @@ function showRenderedMarkup(e) {
 var reCaptcha = {
     init: function () {
         'use strict';
-        if (! /captcha=0/.test(document.cookie) ) {
+        if ( /captcha=1/.test(document.cookie) ) {
             var capField = $('.g-recaptcha');
+            var form = capField.closest('form');
             grecaptcha.render(capField[0], {
                 'sitekey': capField.data('sitekey')
             });
-            var form = capField.closest('form');
             form.on('submit', function(e) {
                 if (grecaptcha.getResponse().length <= 0) {
                     e.preventDefault();
@@ -53,12 +68,24 @@ var initReCaptcha = reCaptcha.init;
 var ModeratorModal = {
     init: function() {
         'use strict';
-        $(".js-action-select").change(function() {
+        var form = $('#modal-form'),
+            actionSelect = form.find('.js-action-select'),
+            selectClosePin = actionSelect.find("option[value='close'],option[value='pin']"),
+            actionUntil = form.find('.js-action-until');
+
+        form.submit(function(e){
+            if (! actionSelect.val()) {
+                e.preventDefault();
+                actionSelect.parent().parent().addClass('has-error');
+            }
+        });
+
+        actionSelect.change(function() {
             if (this.value === 'ban') {
-                $(".js-action-until").removeClass('hidden');
+                actionUntil.removeClass('hidden');
             }
             else {
-                $(".js-action-until").addClass('hidden');
+                actionUntil.addClass('hidden');
             }
         });
 
@@ -75,13 +102,12 @@ var ModeratorModal = {
             var id = parent.attr('id');
             $('#content_object').val(id);
 
-            var form = $('#modal-form');
-            if (id[0] === 't') {
-                $(".js-action-select option[value='close'],option[value='pin']").prop('disabled', false);
+            if (id[0] === 't') {  // if thread
+                selectClosePin.prop('disabled', false);
             }
             else {
-                $(".js-action-select option[value='close'],option[value='pin']").prop('disabled', true);
-                $(".js-action-select").val('delete');
+                selectClosePin.prop('disabled', true);
+                actionSelect.val('');
             }
             form.modal();
         });

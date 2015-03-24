@@ -120,5 +120,7 @@
     </form>
 
 
-    {% include '_moderator-form.html' %}
+    {% if is_moderator %}
+        {% include '_moderator-form.html' %}
+    {% endif %}
 {% endblock content %}

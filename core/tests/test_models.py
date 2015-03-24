@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.core.files.base import File
 from django.test.utils import override_settings
 
-from core.models import Board, Thread
+from ..models import Board, Thread, Post
 from .factories import BoardFactory, ThreadFactory, PostFactory
 from .test_views import TEST_PHOTO_PATH
 
@@ -94,6 +94,19 @@ class TestPost(TestCase):
         self.assertEqual(p.created_at, t.bumped_at)
         self.assertEqual(t.posts_count, 2)
         self.assertEqual(t.posts_count, t.post_set.count())
+
+    def test_new_posts(self):
+        t = ThreadFactory(board=BoardFactory())
+        posts = PostFactory.create_batch(size=5, thread=t)
+        PostFactory(thread=t, is_hidden=True)
+        new_posts = Post.objects.new_posts(posts[0].id, thread_id=t.id,
+                                           board_slug=t.board.slug)
+        self.assertEqual(len(new_posts), 4)
+
+        t2 = ThreadFactory(board=BoardFactory())
+        new_posts = Post.objects.new_posts(posts[0].id, thread_id=t2.id,
+                                           board_slug=t.board.slug)
+        self.assertEqual(len(new_posts), 0)
 
     def test_present(self):
         t = ThreadFactory(board=BoardFactory())

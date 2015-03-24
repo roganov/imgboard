@@ -7,7 +7,8 @@ from django.views.generic.base import TemplateView
 from django.views.decorators.cache import cache_page
 from core.utils import cache_board_view
 
-from core.views import board_view, thread_view, markup_view, preview
+from core.views import board_view, thread_view, markup_view, \
+                       preview, new_posts_view
 from moderators.views import moderator_view
 
 
@@ -29,6 +30,7 @@ urlpatterns = patterns('',
     url(r'api/markup/', markup_view, name='api-markup'),
     url(r'api/(\w+)/preview/(t?\d+)/$', preview, name='api-preview'),
     url(r'api/moderator/(\w+)/$', moderator_view, name='api-moderator'),
+    url(r'api/new-posts/(?P<slug>\w+)/t/(?P<thread_id>\d+)$', new_posts_view, name='api-new-posts'),
 
 
     url(r'^(?P<slug>\w+)/(?P<page>\d+/?)?$',

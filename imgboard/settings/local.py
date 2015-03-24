@@ -11,6 +11,13 @@ DATABASES = {
         }
 }
 
-ENABLE_RECAPTCHA = True
+ENABLE_RECAPTCHA = False
 # FIXME: should be private
 RECAPTCHA_KEY = '6LfXZgMTAAAAAJGqyJQLeTQlfRWUOcR8f0Y-WRh1'
+
+REDIS_CONF = {
+    'host': 'localhost',
+    'port': 6379,
+    'db': 0
+}
+ENABLE_LIVE_UPDATES = False

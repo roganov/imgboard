@@ -1,4 +1,6 @@
+import json
 import os
+from urllib import urlencode
 
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -8,7 +10,7 @@ from nose.tools import *
 import mock
 
 from ..models import Post
-from ..markup import parse
+from misc.markup import parse
 from .factories import BoardFactory, ThreadFactory, PostFactory
 
 
@@ -110,3 +112,15 @@ class TestPreview(TestCase):
         p = PostFactory(thread=t)
         r = self.client.get(reverse('api-preview', args=(t.board.slug, p.pk)))
         assert_ok(r)
+
+class TestNewPosts(TestCase):
+    def test(self):
+        t = ThreadFactory(board=BoardFactory())
+        PostFactory.create_batch(size=2, thread=t)
+        url = reverse('api-new-posts', kwargs={'thread_id': t.id, 'slug': t.board.slug})
+        url = '{}?{}'.format(url, urlencode({'latest_id': 1}))
+        r = self.client.get(url)
+        assert_ok(r)
+        assert_template_used(r, '_post.html')
+        posts = json.loads(r.content)
+        eq_(len(posts), 1)

@@ -1,15 +1,17 @@
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponseRedirect, JsonResponse
+from django.template import Context
+from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
 from moderators.decorators import check_ban
 from .models import Board, Thread, Post
 from .forms import PostForm, ThreadForm
-from .recaptcha import captcha_every_n
-
-from . import markup
+from misc.recaptcha import captcha_every_n
+from misc import markup
 from . import post_markup
+from moderators.forms import ModActionForm
 
 
 @captcha_every_n
@@ -31,6 +33,7 @@ def board_view(request, slug, page=None):
     page = Board.objects.threads_page(page_num, board)
     ctx = {'board': board, 'page': page,
            'form': form,
+           'mod_form': ModActionForm(),
            'is_moderator': board.moderated_by(request.user)}
     return render(request, 'board.html', ctx)
 
@@ -52,6 +55,7 @@ def thread_view(request, slug, thread_id):
     posts = thread.post_set.present()
     ctx = {'board': thread.board, 'thread': thread,
            'form': form, 'posts': posts,
+           'mod_form': ModActionForm(),
            'is_moderator': thread.board.moderated_by(request.user)}
     return render(request, 'thread.html', ctx)
 
@@ -71,3 +75,17 @@ def preview(request, slug, id_):
     else:
         prev = get_object_or_404(Post, thread__board__slug=slug, pk=id_)
     return render_to_response('_post.html', {'post': prev})
+
+@csrf_exempt
+@require_GET
+def new_posts_view(request, slug, thread_id):
+    latest_post_id = request.GET.get('latest_id')
+    if latest_post_id is None or not latest_post_id.isdigit():
+        latest_post_id = -1  # get all posts
+    new_posts = Post.objects.new_posts(latest_id=latest_post_id,
+                                       thread_id=thread_id,
+                                       board_slug=slug)
+    t = get_template('_post.html')
+    posts = [t.render(Context({'post': post}))
+             for post in new_posts]
+    return JsonResponse({'posts': posts})

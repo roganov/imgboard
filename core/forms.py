@@ -1,9 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
-
 from ipware.ip import get_real_ip
-from core.recaptcha import ReCaptchaField
+
+from misc.recaptcha import ReCaptchaField
 from .models import Post, Thread
 
 

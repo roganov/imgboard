@@ -1,7 +1,7 @@
 import uuid
+
 from django.conf import settings
 from django.core.validators import RegexValidator
-
 from django.db import models
 from django.db import transaction
 from django.db.models import F, Prefetch
@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 
 from .utils import get_thumbnail
-from .markup import parse
+from misc.markup import parse
 
 
 class BoardManager(models.Manager):
@@ -31,7 +31,7 @@ class BoardManager(models.Manager):
 
         threads = list(threads)
         for t in threads:
-            # TODO: 4 is hard-coded, probably need add the option to the Board table
+            # TODO: 4 is hard-coded, better to add the option to the Board table
             t.latest_posts = list(t.post_set.all())[-4:]
             t.posts_set = None
         page.object_list = threads
@@ -155,6 +155,10 @@ class PostsManager(models.Manager):
         thread.save()
         post.thread = thread
         return post
+
+    def new_posts(self, latest_id, thread_id, board_slug):
+        return self.filter(thread_id=thread_id, thread__board__slug=board_slug,
+                           id__gt=latest_id).present()
 
 class PostsQuerySet(models.QuerySet):
     def present(self):

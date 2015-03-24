@@ -13,7 +13,7 @@ class ThreadFactory(factory.DjangoModelFactory):
 
 
 class BoardFactory(factory.DjangoModelFactory):
-    slug = 'test'
+    slug = factory.sequence(lambda n: 'test{}'.format(n))
     class Meta:
         model = Board
 

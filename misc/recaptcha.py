@@ -44,15 +44,21 @@ class ReCaptchaField(forms.CharField):
         return value
 
 def captcha_every_n(f):
+    enabled = settings.ENABLE_RECAPTCHA
+    INTERVAL = settings.CAPTCHA_EVERY_N
     @wraps(f)
     def wrapper(request, *args, **kwargs):
         response = f(request, *args, **kwargs)
-        if request.method == 'POST' and settings.ENABLE_RECAPTCHA:
+        if request.method == 'POST' and enabled:
             bc = request.session.get('posts_before_captcha', 0)
             if bc <= 0:
-                request.session['posts_before_captcha'] = new_bc = settings.CAPTCHA_EVERY_N - 1
+                request.session['posts_before_captcha'] = new_bc = INTERVAL - 1
             else:
                 request.session['posts_before_captcha'] = new_bc = bc - 1
             response.set_cookie('captcha', 1 if new_bc == 0 else 0)
+        if not enabled:
+            response.set_cookie('captcha', 0)
+        elif 'captcha' not in request.COOKIES:
+            response.set_cookie('captcha', 1)
         return response
     return wrapper

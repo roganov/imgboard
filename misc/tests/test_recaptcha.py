@@ -1,13 +1,11 @@
-import unittest
 from urllib2 import URLError
+
 from django.test.utils import override_settings
 import mock
-
 from django import forms
 from django import test
-from core import recaptcha
-from core.recaptcha import captcha_every_n
 
+from .. import recaptcha
 from ..recaptcha import ReCaptchaField
 
 
