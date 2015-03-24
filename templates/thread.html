@@ -80,6 +80,8 @@
         </form>
     {% endif %}
 
+    {% if is_moderator %}
     {% include '_moderator-form.html' %}
+    {% endif %}
 
 {% endblock %}

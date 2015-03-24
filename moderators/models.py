@@ -14,17 +14,19 @@ class ModeratorActionManager(models.Manager):
 
     @transaction.atomic
     def create_close(self, *args, **kwargs):
+        """Toggles `is_closed`"""
         kwargs['action'] = 'close'
         mod_action = self.create(*args, **kwargs)
-        mod_action.content_object.is_closed = True
+        mod_action.content_object.is_closed = not mod_action.content_object.is_closed
         mod_action.content_object.save()
         return mod_action
 
     @transaction.atomic
     def create_pin(self, *args, **kwargs):
+        """Toggles `is_pinned`"""
         kwargs['action'] = 'pin'
         mod_action = self.create(*args, **kwargs)
-        mod_action.content_object.is_pinned = True
+        mod_action.content_object.is_pinned = not mod_action.content_object.is_pinned
         mod_action.content_object.save()
         return mod_action
 
@@ -64,8 +66,8 @@ class ModeratorActionManager(models.Manager):
 
 class ModeratorAction(models.Model):
     ACTION_CHOICES = (
-        ('close', 'Close the thread'),
-        ('pin', 'Pin the thread'),
+        ('close', 'Close/Open the thread'),
+        ('pin', 'Pin/Unpin the thread'),
         ('delete', 'Delete this thread or post'),
         ('delete_img', 'Delete img'),
         ('ban', 'Ban the author'),

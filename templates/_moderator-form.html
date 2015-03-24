@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Select what you want to do</h4>
             </div>
-            <form class="form-horizontal" action="{% url 'api-moderator' 'a' %}" method="POST">
+            <form class="form-horizontal" action="{% url 'api-moderator' board.slug %}" method="POST">
                 {% csrf_token %}
                 <div class="modal-body">
                     <input type="hidden" name="content_object" id="content_object">
@@ -13,11 +13,9 @@
                         <label for="action" class="col-sm-2 control-label">Action:</label>
                         <div class="col-sm-8">
                             <select class="form-control js-action-select" name="action" id="action">
-                                <option value="close">Close the thread</option>
-                                <option value="pin">Pin the thread</option>
-                                <option value="ban">Ban the poster</option>
-                                <option value="delete_img">Delete media</option>
-                                <option value="delete" selected="selected">Delete</option>
+                                {% for c in mod_form.fields.action.choices %}
+                                <option value="{{ c.0 }}">{{ c.1 }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>

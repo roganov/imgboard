@@ -31,7 +31,7 @@ class BoardManager(models.Manager):
 
         threads = list(threads)
         for t in threads:
-            # TODO: 4 is hard-coded, probably need add the option to the Board table
+            # TODO: 4 is hard-coded, better to add the option to the Board table
             t.latest_posts = list(t.post_set.all())[-4:]
             t.posts_set = None
         page.object_list = threads

@@ -11,6 +11,7 @@ from .forms import PostForm, ThreadForm
 from misc.recaptcha import captcha_every_n
 from misc import markup
 from . import post_markup
+from moderators.forms import ModActionForm
 
 
 @captcha_every_n
@@ -32,6 +33,7 @@ def board_view(request, slug, page=None):
     page = Board.objects.threads_page(page_num, board)
     ctx = {'board': board, 'page': page,
            'form': form,
+           'mod_form': ModActionForm(),
            'is_moderator': board.moderated_by(request.user)}
     return render(request, 'board.html', ctx)
 
@@ -53,6 +55,7 @@ def thread_view(request, slug, thread_id):
     posts = thread.post_set.present()
     ctx = {'board': thread.board, 'thread': thread,
            'form': form, 'posts': posts,
+           'mod_form': ModActionForm(),
            'is_moderator': thread.board.moderated_by(request.user)}
     return render(request, 'thread.html', ctx)
 

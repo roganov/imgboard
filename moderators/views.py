@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.views.decorators.http import require_POST
 
@@ -14,7 +15,11 @@ def moderator_view(request, slug):
         if request.is_ajax():
             return JsonResponse({'status': 'ok', 'data': {'action': mod_action.action}})
         else:
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+            if mod_action.content_type.model == 'thread' and mod_action.action == 'delete':
+                url = reverse('board', kwargs={'slug': slug})
+            else:
+                url = request.META.get('HTTP_REFERER', '/')
+            return HttpResponseRedirect(url)
     else:
         if request.is_ajax():
             return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)

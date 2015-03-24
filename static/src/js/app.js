@@ -68,12 +68,24 @@ var initReCaptcha = reCaptcha.init;
 var ModeratorModal = {
     init: function() {
         'use strict';
-        $(".js-action-select").change(function() {
+        var form = $('#modal-form'),
+            actionSelect = form.find('.js-action-select'),
+            selectClosePin = actionSelect.find("option[value='close'],option[value='pin']"),
+            actionUntil = form.find('.js-action-until');
+
+        form.submit(function(e){
+            if (! actionSelect.val()) {
+                e.preventDefault();
+                actionSelect.parent().parent().addClass('has-error');
+            }
+        });
+
+        actionSelect.change(function() {
             if (this.value === 'ban') {
-                $(".js-action-until").removeClass('hidden');
+                actionUntil.removeClass('hidden');
             }
             else {
-                $(".js-action-until").addClass('hidden');
+                actionUntil.addClass('hidden');
             }
         });
 
@@ -90,13 +102,12 @@ var ModeratorModal = {
             var id = parent.attr('id');
             $('#content_object').val(id);
 
-            var form = $('#modal-form');
-            if (id[0] === 't') {
-                $(".js-action-select option[value='close'],option[value='pin']").prop('disabled', false);
+            if (id[0] === 't') {  // if thread
+                selectClosePin.prop('disabled', false);
             }
             else {
-                $(".js-action-select option[value='close'],option[value='pin']").prop('disabled', true);
-                $(".js-action-select").val('delete');
+                selectClosePin.prop('disabled', true);
+                actionSelect.val('');
             }
             form.modal();
         });

@@ -12,7 +12,7 @@ class ModActionForm(forms.ModelForm):
         fields = ['action', 'reason']
 
     def __init__(self, *args, **kwargs):
-        self.moderator = kwargs.pop('user')
+        self.moderator = kwargs.pop('user', None)
         super(ModActionForm, self).__init__(*args, **kwargs)
 
     def clean_moderator(self):

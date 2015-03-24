@@ -37,6 +37,11 @@ class ModActManagerTest(TestCase):
         obj = Thread.objects.get(pk=self.t.pk)
         ok_(obj.is_closed)
 
+        # test toggle
+        mod_action = ModeratorAction.objects.create_close(**opts)
+        obj = Thread.objects.get(pk=self.t.pk)
+        ok_(not obj.is_closed)
+
     def test_create_pin(self):
         opts = {'content_object': self.t,
                 'reason': 'Reason',
@@ -46,6 +51,11 @@ class ModActManagerTest(TestCase):
 
         obj = Thread.objects.get(pk=self.t.pk)
         ok_(obj.is_pinned)
+
+        # test toggle
+        mod_action = ModeratorAction.objects.create_pin(**opts)
+        obj = Thread.objects.get(pk=self.t.pk)
+        ok_(not obj.is_pinned)
 
     def test_create_delete(self):
         opts = {'content_object': self.t,
